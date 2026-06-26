@@ -2,20 +2,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Monnify.Authentication;
+using Monnify.Banks;
+using Monnify.Http;
+using Monnify.Verification;
 
 namespace Monnify;
 
 /// <summary>
-/// Registers the Monnify SDK's authentication infrastructure into an <see cref="IServiceCollection"/>.
-/// Typed clients added in later phases call <c>AddHttpClient&lt;TInterface, TImplementation&gt;</c>
-/// with <c>.AddHttpMessageHandler&lt;MonnifyAuthHandler&gt;()</c> to pick up authentication automatically.
+/// Registers every Monnify SDK service into an <see cref="IServiceCollection"/>: authentication
+/// infrastructure plus each typed client (added via
+/// <c>AddHttpClient&lt;TInterface, TImplementation&gt;(...).AddMonnifyDefaults()</c>, which attaches
+/// bearer-token auth and, on net8.0, resilience).
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Adds Monnify SDK services. Call this once, typically in <c>Program.cs</c>, then inject the
-    /// individual typed clients (or the <c>MonnifyClient</c> facade, once a client exists)
-    /// wherever you need them.
+    /// individual typed clients (or the <see cref="MonnifyClient"/> facade) wherever you need them.
     /// </summary>
     public static IServiceCollection AddMonnify(this IServiceCollection services, Action<MonnifyClientOptions> configureOptions)
     {
@@ -39,6 +42,11 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IMonnifyTokenProvider, MonnifyTokenProvider>();
         services.AddTransient<MonnifyAuthHandler>();
+
+        services.AddHttpClient<IMonnifyBanksClient, MonnifyBanksClient>(ConfigureBaseAddress).AddMonnifyDefaults();
+        services.AddHttpClient<IMonnifyVerificationClient, MonnifyVerificationClient>(ConfigureBaseAddress).AddMonnifyDefaults();
+
+        services.AddTransient<MonnifyClient>();
 
         return services;
     }

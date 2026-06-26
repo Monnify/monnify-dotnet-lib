@@ -11,7 +11,30 @@ internal static class MonnifyApiPaths
 {
     internal static class Auth
     {
-        /// <summary>Confirmed. POST, HTTP Basic auth (base64 apiKey:secretKey).</summary>
+        /// <summary>Confirmed against live sandbox 2026-06-26. POST, HTTP Basic auth (base64 apiKey:secretKey).</summary>
         public const string Login = "/api/v1/auth/login";
+    }
+
+    internal static class Banks
+    {
+        /// <summary>Confirmed against live sandbox 2026-06-26. GET, all banks (most without USSD info).</summary>
+        public const string GetAll = "/api/v1/banks";
+
+        /// <summary>Confirmed against live sandbox 2026-06-26. GET, banks with USSD templates populated.</summary>
+        public const string GetUssdEnabled = "/api/v1/sdk/transactions/banks";
+    }
+
+    internal static class Verification
+    {
+        /// <summary>
+        /// Confirmed against live sandbox 2026-06-26. GET with accountNumber/bankCode query params.
+        /// Free on both sandbox and live, per Monnify's documentation.
+        /// </summary>
+        public const string ValidateAccountNumber = "/api/v1/disbursements/account/validate";
+
+        // BVN/NIN verification endpoints are documented as live-only and cost real money against
+        // the merchant's wallet balance per request, so they can't be confirmed via sandbox and
+        // weren't probed against live without explicit authorization to spend. Not yet implemented
+        // — see docs/COMPATIBILITY.md.
     }
 }

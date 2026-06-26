@@ -22,8 +22,10 @@ Status legend:
 | *(Disbursements — single transfer)* | `POST /api/v2/disbursements/single` (assumed v2) | Partial | Operation name confirmed via anchor, literal path not directly observed |
 | *(Disbursements — bulk transfer)* | `POST /api/v2/disbursements/batch` (assumed v2) | Partial | Same as above |
 | *(Disbursements — wallet balance)* | `GET /api/v2/disbursements/wallet-balance` (assumed) | Partial | |
-| *(Verification — BVN)* | unknown | Unconfirmed | |
-| *(Banks — list)* | unknown | Unconfirmed | Supported-banks table confirmed to exist (~361 entries with USSD codes), API path not observed |
+| `IMonnifyVerificationClient.ValidateAccountNumberAsync` | `GET /api/v1/disbursements/account/validate?accountNumber=&bankCode=` | **Confirmed** (live sandbox call, 2026-06-26) | Free on both sandbox and live per Monnify's docs; envelope `responseBody: {accountNumber, accountName, bankCode, currencyCode}` |
+| *(Verification — BVN/NIN)* | unknown | **Not implemented** | Confirmed live-only by the user (2026-06-26) and billed against the merchant wallet per request — can never be sandbox-verified, and wasn't probed against live without explicit authorization to spend real money. Revisit once prod verification is authorized. |
+| `IMonnifyBanksClient.GetBanksAsync` | `GET /api/v1/banks` | **Confirmed** (live sandbox call, 2026-06-26) | Returns all banks; `responseBody` is a JSON array of `{name, code, nipBankCode, ussdTemplate, baseUssdCode, transferUssdTemplate}` — most entries have null USSD fields |
+| `IMonnifyBanksClient.GetUssdEnabledBanksAsync` | `GET /api/v1/sdk/transactions/banks` | **Confirmed** (live sandbox call, 2026-06-26) | Subset of banks; even here, at least one entry (Suntrust Bank) was observed with a null `ussdTemplate` — don't assume every item has one populated |
 | *(Webhooks — signature)* | `monnify-signature` header, `SHA-512(secretKey + rawBody)` | Confirmed (algorithm) / Unconfirmed (hex casing) | Hex casing of the computed digest not yet checked against a real captured webhook |
 | *(Bills payment)* | unknown | Unconfirmed | Category barely explored; scheduled last |
 

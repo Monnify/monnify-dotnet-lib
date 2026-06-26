@@ -23,3 +23,13 @@ own version is independent of Monnify's API versioning.
   (`Microsoft.Extensions.Http.Resilience`) is net8.0-only — its dependency chain
   doesn't ship real netstandard2.0 binaries despite nuspec metadata claiming
   support, so netstandard2.0 consumers get plain typed clients without it.
+- `IMonnifyBanksClient` (`GetBanksAsync`, `GetUssdEnabledBanksAsync`) and
+  `IMonnifyVerificationClient.ValidateAccountNumberAsync` (account name enquiry),
+  plus the `MonnifyClient` facade. All three endpoints confirmed against the
+  real Monnify sandbox. BVN/NIN verification is intentionally **not** included
+  yet — Monnify confirmed those are live-only and billed per request, so they
+  can't be sandbox-verified and weren't probed against live without explicit
+  authorization to spend real money.
+- Sandbox integration test infrastructure (`tests/Monnify.IntegrationTests`):
+  reads credentials from environment variables, uses `Xunit.SkippableFact` so
+  CI (no sandbox access) reports skips rather than failures.
