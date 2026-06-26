@@ -26,5 +26,6 @@ Thumbs.db
 
 ## Secrets (never commit real credentials)
 *.env
+.sandbox.env
 secrets.json
 appsettings.*.local.json
