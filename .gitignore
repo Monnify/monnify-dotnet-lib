@@ -1,0 +1,30 @@
+## .NET
+bin/
+obj/
+artifacts/
+*.user
+*.userosscache
+*.sln.docstates
+
+## Test results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+
+## Rider/VS/VSCode
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Secrets (never commit real credentials)
+*.env
+secrets.json
+appsettings.*.local.json

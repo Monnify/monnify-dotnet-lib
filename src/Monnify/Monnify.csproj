@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Description>Idiomatic .NET SDK for the Monnify payment gateway API: collections, disbursements, verification, banks, and webhook signature validation.</Description>
+    <PackageTags>monnify;payments;sdk;nigeria;fintech;disbursement;collections;webhooks</PackageTags>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <!-- ASP.NET Core's HttpRequest/HttpContext types come from the shared framework on net8.0,
+       but netstandard2.0 consumers need the standalone (interfaces-only) NuGet package. This is
+       the standard multi-targeting pattern for libraries that offer optional ASP.NET Core helpers
+       without forcing a hosting dependency on non-web (console/worker) consumers. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <!-- Despite its nuspec listing a netstandard2.0 dependency group, Microsoft.Extensions.Http.Resilience's
+         transitive deps (Telemetry, Compliance.Abstractions, etc.) ship no real netstandard2.0 assets and
+         fall back to .NET Framework compat-shimmed binaries (NU1701) there. Built-in resilience is therefore
+         a net8.0-only feature here; netstandard2.0 consumers get plain typed HttpClients without it
+         (documented in README) rather than a fragile, untested dependency chain. -->
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <DefineConstants>$(DefineConstants);MONNIFY_RESILIENCE</DefineConstants>
+  </PropertyGroup>
+
+</Project>

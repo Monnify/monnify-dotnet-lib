@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/Monnify.Samples.ConsoleApp/Monnify.Samples.ConsoleApp.csproj" />
+    <Project Path="samples/Monnify.Samples.WebApi/Monnify.Samples.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Monnify/Monnify.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Monnify.IntegrationTests/Monnify.IntegrationTests.csproj" />
+    <Project Path="tests/Monnify.Tests/Monnify.Tests.csproj" />
+  </Folder>
+</Solution>
