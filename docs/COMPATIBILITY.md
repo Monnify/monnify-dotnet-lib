@@ -11,11 +11,19 @@ Status legend:
 | SDK Method | Monnify Endpoint | Status | Notes |
 |---|---|---|---|
 | `MonnifyTokenProvider.LoginAsync` | `POST /api/v1/auth/login` | **Implemented** | Basic auth (`base64(apiKey:secretKey)`); envelope `{requestSuccessful, responseMessage, responseCode, responseBody:{accessToken, expiresIn}}` |
-| *(Collections — checkout/init)* | `POST /api/v1/transactions/init` | Planned | Phase 3 |
-| *(Collections — reserved accounts)* | `POST /api/v2/bank-transfer/reserved-accounts` | Planned | Phase 3 |
-| *(Collections — sub-accounts/splitting)* | TBD | Planned | Phase 3 |
-| *(Collections — direct debit/mandates)* | TBD | Planned | Phase 3 |
-| *(Collections — card tokenization)* | TBD | Planned | Phase 3 |
+| `IMonnifyCollectionsClient.InitializeTransactionAsync` | `POST /api/v1/merchant/transactions/init-transaction` | **Implemented** | Returns a hosted `checkoutUrl`; `contractCode` is required |
+| `IMonnifyCollectionsClient.CreateReservedAccountAsync` | `POST /api/v2/bank-transfer/reserved-accounts` | **Implemented** | `getAllAvailableBanks` is required (bool); if `false`, `preferredBanks` must be supplied |
+| `IMonnifyCollectionsClient.GetReservedAccountAsync` | `GET /api/v2/bank-transfer/reserved-accounts/{accountReference}` | **Implemented** | |
+| `IMonnifyCollectionsClient.GetReservedAccountTransactionsAsync` | `GET /api/v1/bank-transfer/reserved-accounts/transactions?accountReference=&page=&size=` | **Implemented** | Per-transaction item fields modeled from general Monnify conventions; no real example with content was observed (test account had zero transactions) |
+| `IMonnifyCollectionsClient.DeleteReservedAccountAsync` | `DELETE /api/v1/bank-transfer/reserved-accounts/reference/{accountReference}` | **Implemented** | Note the `/reference/` path segment — easy to miss |
+| `IMonnifyCollectionsClient.CreateInvoiceAsync` | `POST /api/v1/invoice/create` | **Implemented** | Sandbox rejects `expiryDate` too far in the future |
+| `IMonnifyCollectionsClient.GetInvoiceAsync` | `GET /api/v1/invoice/{invoiceReference}/details` | **Implemented** | |
+| `IMonnifyCollectionsClient.GetInvoicesAsync` | `GET /api/v1/invoice/all?page=&size=` | **Implemented** | |
+| `IMonnifyCollectionsClient.CancelInvoiceAsync` | `DELETE /api/v1/invoice/{invoiceReference}/cancel` | **Implemented** | |
+| *(Collections — sub-accounts/splitting)* | TBD | Planned | Phase 3 follow-up |
+| *(Collections — direct debit/mandates)* | TBD | Planned | Phase 3 follow-up |
+| *(Collections — card tokenization)* | TBD | Planned | Phase 3 follow-up |
+| *(Collections — Payment Links)* | N/A | Out of scope | Dashboard-only feature, no API |
 | *(Disbursements — single transfer)* | `POST /api/v2/disbursements/single` | Planned | Phase 4 |
 | *(Disbursements — bulk transfer)* | `POST /api/v2/disbursements/batch` | Planned | Phase 4 |
 | *(Disbursements — wallet balance)* | `GET /api/v2/disbursements/wallet-balance` | Planned | Phase 4 |

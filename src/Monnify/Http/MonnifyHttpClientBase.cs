@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Monnify.Exceptions;
 
@@ -61,4 +62,7 @@ internal abstract class MonnifyHttpClientBase
         return response.Content.ReadAsStringAsync();
 #endif
     }
+
+    protected static HttpContent CreateJsonContent<TRequestBody>(TRequestBody value) =>
+        new StringContent(JsonSerializer.Serialize(value, MonnifyJsonOptions.Default), Encoding.UTF8, "application/json");
 }

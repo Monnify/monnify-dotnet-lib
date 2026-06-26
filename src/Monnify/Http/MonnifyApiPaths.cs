@@ -27,4 +27,13 @@ internal static class MonnifyApiPaths
         public const string BvnAccountMatch = "/api/v1/vas/bvn-account-match";
         public const string NinDetails = "/api/v1/vas/nin-details";
     }
+
+    internal static class Collections
+    {
+        public const string InitializeTransaction = "/api/v1/merchant/transactions/init-transaction";
+        public const string ReservedAccountsBase = "/api/v2/bank-transfer/reserved-accounts";
+        public const string ReservedAccountsBaseV1 = "/api/v1/bank-transfer/reserved-accounts";
+        public const string CreateInvoice = "/api/v1/invoice/create";
+        public const string InvoiceBase = "/api/v1/invoice";
+    }
 }

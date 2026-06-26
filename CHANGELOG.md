@@ -32,3 +32,10 @@ own version is independent of Monnify's API versioning.
 - Sandbox integration test infrastructure (`tests/Monnify.IntegrationTests`):
   reads credentials from environment variables, uses `Xunit.SkippableFact` so
   CI (no sandbox access) reports skips rather than failures.
+- `IMonnifyCollectionsClient`: `InitializeTransactionAsync` (checkout), reserved
+  accounts (`CreateReservedAccountAsync`, `GetReservedAccountAsync`,
+  `GetReservedAccountTransactionsAsync`, `DeleteReservedAccountAsync`), and
+  invoices (`CreateInvoiceAsync`, `GetInvoiceAsync`, `GetInvoicesAsync`,
+  `CancelInvoiceAsync`). Payment Links are dashboard-only and have no API, so
+  they're out of scope. Sub-accounts/splitting, direct debit, and card
+  tokenization are deferred to a follow-up.

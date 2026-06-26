@@ -9,10 +9,10 @@ disbursements, verification, banks, and webhook signature validation —
 targeting `netstandard2.0` and `net8.0`. This is not an official Monnify
 project.
 
-> **Status: pre-release / under active development.** See the
+> **Status: pre-release / under active development.** See
 > [implementation phasing](#status) below and
 > [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for which endpoints are
-> confirmed against a live sandbox versus still being verified.
+> implemented.
 
 ## Status
 
@@ -22,7 +22,7 @@ code:
 - [x] Phase 0 — repo scaffolding
 - [x] Phase 1 — core HTTP + authentication infrastructure
 - [x] Phase 2 — verification + banks clients
-- [ ] Phase 3 — collections client
+- [x] Phase 3 — collections client
 - [ ] Phase 4 — disbursements client
 - [ ] Phase 5 — webhooks
 - [ ] Phase 6 — bills payment

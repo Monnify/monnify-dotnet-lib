@@ -1,4 +1,5 @@
 using Monnify.Banks;
+using Monnify.Collections;
 using Monnify.Verification;
 
 namespace Monnify;
@@ -10,13 +11,16 @@ namespace Monnify;
 /// </summary>
 public sealed class MonnifyClient
 {
-    public MonnifyClient(IMonnifyBanksClient banks, IMonnifyVerificationClient verification)
+    public MonnifyClient(IMonnifyBanksClient banks, IMonnifyVerificationClient verification, IMonnifyCollectionsClient collections)
     {
         Banks = banks;
         Verification = verification;
+        Collections = collections;
     }
 
     public IMonnifyBanksClient Banks { get; }
 
     public IMonnifyVerificationClient Verification { get; }
+
+    public IMonnifyCollectionsClient Collections { get; }
 }

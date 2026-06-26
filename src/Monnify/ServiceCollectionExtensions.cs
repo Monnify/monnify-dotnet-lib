@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Monnify.Authentication;
 using Monnify.Banks;
+using Monnify.Collections;
 using Monnify.Http;
 using Monnify.Verification;
 
@@ -45,6 +46,7 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpClient<IMonnifyBanksClient, MonnifyBanksClient>(ConfigureBaseAddress).AddMonnifyDefaults();
         services.AddHttpClient<IMonnifyVerificationClient, MonnifyVerificationClient>(ConfigureBaseAddress).AddMonnifyDefaults();
+        services.AddHttpClient<IMonnifyCollectionsClient, MonnifyCollectionsClient>(ConfigureBaseAddress).AddMonnifyDefaults();
 
         services.AddTransient<MonnifyClient>();
 

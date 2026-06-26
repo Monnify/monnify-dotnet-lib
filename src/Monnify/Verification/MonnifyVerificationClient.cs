@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using Monnify.Http;
 
 namespace Monnify.Verification;
@@ -68,7 +66,4 @@ internal sealed class MonnifyVerificationClient : MonnifyHttpClientBase, IMonnif
         };
         return SendAsync<NinVerificationResult>(httpRequest, cancellationToken);
     }
-
-    private static HttpContent CreateJsonContent<T>(T value) =>
-        new StringContent(JsonSerializer.Serialize(value, MonnifyJsonOptions.Default), Encoding.UTF8, "application/json");
 }
