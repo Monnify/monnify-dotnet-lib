@@ -21,7 +21,7 @@ code:
 
 - [x] Phase 0 — repo scaffolding
 - [x] Phase 1 — core HTTP + authentication infrastructure
-- [x] Phase 2 — verification + banks clients (BVN/NIN deferred — live-only, billed; see docs/COMPATIBILITY.md)
+- [x] Phase 2 — verification + banks clients
 - [ ] Phase 3 — collections client
 - [ ] Phase 4 — disbursements client
 - [ ] Phase 5 — webhooks

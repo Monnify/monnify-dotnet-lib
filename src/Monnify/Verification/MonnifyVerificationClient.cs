@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using Monnify.Http;
 
 namespace Monnify.Verification;
@@ -24,4 +26,49 @@ internal sealed class MonnifyVerificationClient : MonnifyHttpClientBase, IMonnif
         var request = new HttpRequestMessage(HttpMethod.Get, path);
         return SendAsync<AccountNumberValidationResult>(request, cancellationToken);
     }
+
+    public Task<BvnDetailsMatchResult> MatchBvnDetailsAsync(BvnDetailsMatchRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Verification.BvnDetailsMatch)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<BvnDetailsMatchResult>(httpRequest, cancellationToken);
+    }
+
+    public Task<BvnAccountMatchResult> MatchBvnToAccountAsync(BvnAccountMatchRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Verification.BvnAccountMatch)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<BvnAccountMatchResult>(httpRequest, cancellationToken);
+    }
+
+    public Task<NinVerificationResult> VerifyNinAsync(string nin, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(nin))
+        {
+            throw new ArgumentException("NIN must be provided.", nameof(nin));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Verification.NinDetails)
+        {
+            Content = CreateJsonContent(new { nin }),
+        };
+        return SendAsync<NinVerificationResult>(httpRequest, cancellationToken);
+    }
+
+    private static HttpContent CreateJsonContent<T>(T value) =>
+        new StringContent(JsonSerializer.Serialize(value, MonnifyJsonOptions.Default), Encoding.UTF8, "application/json");
 }

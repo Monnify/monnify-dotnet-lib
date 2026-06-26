@@ -24,9 +24,6 @@ public sealed class MonnifyApiException : MonnifyException
     /// <summary>The HTTP status code of the underlying response.</summary>
     public int HttpStatusCode { get; }
 
-    /// <summary>
-    /// The raw response body, preserved so consumers can inspect it when the envelope shape
-    /// for a given endpoint hasn't been fully verified (see docs/COMPATIBILITY.md).
-    /// </summary>
+    /// <summary>The raw response body, for diagnostics when you need more than the message/code.</summary>
     public string? RawResponseBody { get; }
 }

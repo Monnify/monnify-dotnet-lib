@@ -1,10 +1,9 @@
 # Monnify.IntegrationTests
 
-These tests hit Monnify's real **sandbox** API and are the actual verification
-mechanism for endpoint correctness in this repo (see [CONTRIBUTING.md](../../CONTRIBUTING.md)
-and [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md)) — the public docs
-site was unreliable when this SDK was bootstrapped, so sandbox behavior is
-ground truth, not the docs.
+These tests hit Monnify's real **sandbox** API, validating end-to-end behavior
+alongside the mocked unit tests in `Monnify.Tests` (see
+[CONTRIBUTING.md](../../CONTRIBUTING.md) and
+[docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md)).
 
 They're tagged `[Trait("Category", "Sandbox")]` and use `[SkippableFact]`
 (`Xunit.SkippableFact`) so they **skip silently rather than fail** when

@@ -11,4 +11,23 @@ public interface IMonnifyVerificationClient
     /// <param name="cancellationToken">A token to cancel the request.</param>
     Task<AccountNumberValidationResult> ValidateAccountNumberAsync(
         string accountNumber, string bankCode, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Checks whether a person's claimed name, date of birth, and mobile number match BVN records.
+    /// <b>Bills the merchant's wallet per request</b> — only call this when you actually need a
+    /// verification, not speculatively.
+    /// </summary>
+    Task<BvnDetailsMatchResult> MatchBvnDetailsAsync(BvnDetailsMatchRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Checks whether a BVN matches the owner of a given bank account. <b>Bills the merchant's
+    /// wallet per request.</b>
+    /// </summary>
+    Task<BvnAccountMatchResult> MatchBvnToAccountAsync(BvnAccountMatchRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Verifies a National Identification Number (NIN). Only available in Monnify's Live
+    /// environment, and <b>bills the merchant's wallet per request</b>.
+    /// </summary>
+    Task<NinVerificationResult> VerifyNinAsync(string nin, CancellationToken cancellationToken = default);
 }

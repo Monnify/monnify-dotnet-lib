@@ -3,10 +3,9 @@
 ## Adding or fixing an API client
 
 1. Confirm the literal endpoint path, HTTP method, and request/response shape
-   against Monnify's sandbox (or their Postman collection) — don't trust the
-   public docs alone, they're known to drift and were unreliable when this
-   SDK was bootstrapped. Update [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)
-   with the confirmed status.
+   against Monnify's sandbox (or their official API reference/Postman
+   collection). Update [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) once
+   it's implemented.
 2. Add the endpoint path as a named constant in `Monnify.Http.MonnifyApiPaths`,
    scoped to its own category — never assume a single global API version
    prefix, since Monnify versions endpoints independently.
@@ -30,5 +29,5 @@
 
 - [ ] Tests added/updated and passing (`dotnet test`)
 - [ ] `CHANGELOG.md` updated
-- [ ] `docs/COMPATIBILITY.md` updated if an endpoint's confirmed status changed
+- [ ] `docs/COMPATIBILITY.md` updated for any endpoint you implemented
 - [ ] No secrets, tokens, or real API keys committed

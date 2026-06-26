@@ -5,9 +5,7 @@ namespace Monnify.Http;
 
 /// <summary>
 /// Shared request/response handling for typed Monnify clients: sends a request, unwraps Monnify's
-/// standard envelope, and throws a typed exception on failure or on an unparsable response. Centralizing
-/// this here means an endpoint whose envelope shape turns out to deviate surfaces as one
-/// <see cref="MonnifyDeserializationException"/> with the raw body attached, not a silently wrong value.
+/// standard envelope, and throws a typed exception on failure or on an unparsable response.
 /// </summary>
 internal abstract class MonnifyHttpClientBase
 {
