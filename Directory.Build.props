@@ -22,4 +22,8 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>
