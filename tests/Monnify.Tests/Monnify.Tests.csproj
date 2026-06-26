@@ -4,6 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!-- Lets the test host run on a newer major runtime if an exact net8.0 runtime isn't installed
+         (e.g. a dev machine with only the .NET 10 runtime). Doesn't affect the published library's TFMs. -->
+    <RollForward>LatestMajor</RollForward>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +15,7 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Moq" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
 
   <ItemGroup>

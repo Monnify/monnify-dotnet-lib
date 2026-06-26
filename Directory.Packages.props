@@ -10,7 +10,10 @@
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="8.10.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+    <!-- net8.0 gets System.Text.Json from the shared framework; netstandard2.0 needs it as a package -->
+    <PackageVersion Include="System.Text.Json" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <!-- Only resolved on netstandard2.0 builds; net8.0 uses FrameworkReference to Microsoft.AspNetCore.App instead -->
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

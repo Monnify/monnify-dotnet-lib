@@ -14,3 +14,12 @@ own version is independent of Monnify's API versioning.
 ### Added
 - Initial repository scaffolding: solution layout, Central Package Management,
   shared build properties, CI/CD workflow skeletons.
+- Core HTTP and authentication infrastructure: `AddMonnify(...)` DI registration,
+  `MonnifyClientOptions` (environment/credentials/HTTPS validation), a singleton
+  token provider that caches and proactively refreshes Monnify's bearer token
+  (with reactive 401 retry-once), `MonnifyHttpClientBase` for envelope unwrapping,
+  and the `MonnifyApiException` / `MonnifyAuthenticationException` /
+  `MonnifyDeserializationException` exception model. Built-in HTTP resilience
+  (`Microsoft.Extensions.Http.Resilience`) is net8.0-only — its dependency chain
+  doesn't ship real netstandard2.0 binaries despite nuspec metadata claiming
+  support, so netstandard2.0 consumers get plain typed clients without it.

@@ -20,7 +20,7 @@ This SDK is being built incrementally. Each milestone ships working, tested
 code:
 
 - [x] Phase 0 — repo scaffolding
-- [ ] Phase 1 — core HTTP + authentication infrastructure
+- [x] Phase 1 — core HTTP + authentication infrastructure
 - [ ] Phase 2 — verification + banks clients
 - [ ] Phase 3 — collections client
 - [ ] Phase 4 — disbursements client

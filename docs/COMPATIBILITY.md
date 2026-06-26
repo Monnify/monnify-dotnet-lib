@@ -13,7 +13,7 @@ Status legend:
 
 | SDK Method | Monnify Endpoint | Status | Notes |
 |---|---|---|---|
-| `MonnifyTokenProvider.LoginAsync` | `POST /api/v1/auth/login` | Confirmed | Basic auth, returns bearer token, 3600s expiry |
+| `MonnifyTokenProvider.LoginAsync` | `POST /api/v1/auth/login` | Confirmed (path/method/auth/expiry) / Partial (field name) | Basic auth, returns bearer token, 3600s expiry confirmed; the `expiresIn` response field name is inferred from convention, not independently observed — code falls back to 3600s if absent/zero |
 | *(Collections — to be added in Phase 3)* | `POST /api/v1/transactions/init` | Confirmed | Checkout/init transaction |
 | *(Collections — reserved accounts)* | `POST /api/v2/bank-transfer/reserved-accounts` (assumed v2) | Partial | Not independently reconfirmed this session |
 | *(Collections — sub-accounts/splitting)* | unknown | Unconfirmed | Docs site 502'd before path was observed |
