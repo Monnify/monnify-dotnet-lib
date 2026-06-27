@@ -11,6 +11,14 @@ own version is independent of Monnify's API versioning.
 
 ## [Unreleased]
 
+### Fixed
+- Error responses that don't match Monnify's standard envelope (a gateway-level rejection, an
+  HTTP error page, or any 401/403 returned because a feature like Disbursements isn't activated
+  for the merchant yet) now surface a clear fallback message instead of an empty
+  `responseCode`/`responseMessage`. The envelope's string fields were defaulting to `""` rather
+  than `null`, which silently defeated the fallback logic in both `MonnifyHttpClientBase` and
+  `MonnifyTokenProvider`.
+
 ### Added
 - Initial repository scaffolding: solution layout, Central Package Management,
   shared build properties, CI/CD workflow skeletons.

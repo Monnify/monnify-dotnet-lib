@@ -114,13 +114,28 @@ public class MonnifyTokenProviderTests
     }
 
     [Fact]
-    public async Task GetAccessTokenAsync_RequestSuccessfulFalse_ThrowsMonnifyAuthenticationException()
+    public async Task GetAccessTokenAsync_RequestSuccessfulFalse_ThrowsMonnifyAuthenticationException_WithRealMessage()
     {
         var handler = new FakeHttpMessageHandler();
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """{ "requestSuccessful": false, "responseMessage": "invalid key", "responseCode": "99" }"""));
         using var provider = CreateProvider(handler);
 
-        await Assert.ThrowsAsync<MonnifyAuthenticationException>(() => provider.GetAccessTokenAsync().AsTask());
+        var ex = await Assert.ThrowsAsync<MonnifyAuthenticationException>(() => provider.GetAccessTokenAsync().AsTask());
+        Assert.Contains("invalid key", ex.Message);
+    }
+
+    [Fact]
+    public async Task GetAccessTokenAsync_RequestSuccessfulFalse_NonEnvelopeBody_FallsBackToUnknownError()
+    {
+        // A 200 OK that doesn't match Monnify's usual envelope shape at all (e.g. a misconfigured
+        // gateway). Confirms the "unknown error" fallback actually fires instead of rendering an
+        // empty responseMessage.
+        var handler = new FakeHttpMessageHandler();
+        handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """{ "status": "ok but not the shape we expect" }"""));
+        using var provider = CreateProvider(handler);
+
+        var ex = await Assert.ThrowsAsync<MonnifyAuthenticationException>(() => provider.GetAccessTokenAsync().AsTask());
+        Assert.Contains("unknown error", ex.Message);
     }
 
     [Fact]
