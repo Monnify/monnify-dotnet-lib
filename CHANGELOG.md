@@ -56,10 +56,22 @@ own version is independent of Monnify's API versioning.
   `GetSingleTransferAsync`, `GetSingleTransfersAsync`), bulk transfers
   (`InitiateBulkTransferAsync`, `AuthorizeBulkTransferAsync`,
   `ResendBulkTransferOtpAsync`, `GetBulkTransferSummaryAsync`,
-  `GetBulkTransferTransactionsAsync`), plus `SearchTransactionsAsync` and
-  `GetWalletBalanceAsync`. The Transfer feature requires Monnify to activate it
+  `GetBulkTransferTransactionsAsync`, `GetBulkTransfersAsync`), plus
+  `SearchTransactionsAsync` and `GetWalletBalanceAsync`.
+  `GetBulkTransfersAsync` calls `GET /api/v2/disbursements/bulk` — Monnify's
+  docs show this path with a `/transactions` suffix, which 404s in the
+  sandbox. The Transfer feature requires Monnify to activate it
   for the merchant first (contact sales@monnify.com). Registered with automatic
   retry disabled: an ambiguous failure on a transfer-initiating call must be
   resolved by querying status with the same reference, not by resending the
   request, to avoid a double disbursement. `AddMonnifyDefaults` now takes an
   `allowAutomaticRetry` flag to support this per-client.
+- `MonnifyWebhookValidator.IsValid` / `ComputeSignature`: verifies the
+  `monnify-signature` header as `HMAC-SHA512(key: secretKey, message:
+  rawRequestBody)`, comparing case-insensitively in constant time. Verified
+  against Monnify's own documented sample secret/body/hash. Note: Monnify's
+  webhooks docs describe the scheme as a plain `SHA-512(secretKey + body)`
+  hash (not HMAC) and their JS sample pretty-prints the body before hashing —
+  neither reproduces the "Hashed Value" published on the same docs page; only
+  hashing the *compact* JSON form with HMAC-SHA512 does, which is what their
+  own Java sample does and what this validator implements.

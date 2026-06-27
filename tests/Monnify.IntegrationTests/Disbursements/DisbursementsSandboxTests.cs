@@ -89,6 +89,9 @@ public class DisbursementsSandboxTests : IClassFixture<SandboxClientFixture>
 
         var transactions = await client.GetBulkTransferTransactionsAsync(batchReference);
         Assert.NotEmpty(transactions.Content);
+
+        var allBatches = await client.GetBulkTransfersAsync(SandboxDisbursementWallet.Value, pageNo: 0, pageSize: 3);
+        Assert.NotEmpty(allBatches.Content);
     }
 
     [SkippableFact]

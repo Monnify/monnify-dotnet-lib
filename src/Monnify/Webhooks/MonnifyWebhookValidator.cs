@@ -5,10 +5,10 @@ namespace Monnify.Webhooks;
 
 /// <summary>
 /// Verifies the <c>monnify-signature</c> header Monnify sends with every webhook request, computed
-/// as <c>SHA-512(secretKey + rawRequestBody)</c> (a plain hash, not an HMAC). Always verify the
-/// signature before acting on a webhook body — anyone can otherwise POST a fake event to your
-/// endpoint. Treat an IP allowlist as defense-in-depth at most, since Monnify's sending IP can
-/// change; signature verification is the primary control.
+/// as <c>HMAC-SHA512(key: secretKey, message: rawRequestBody)</c>. Always verify the signature
+/// before acting on a webhook body — anyone can otherwise POST a fake event to your endpoint.
+/// Treat an IP allowlist as defense-in-depth at most, since Monnify's sending IP can change;
+/// signature verification is the primary control.
 /// </summary>
 public static class MonnifyWebhookValidator
 {
@@ -39,13 +39,8 @@ public static class MonnifyWebhookValidator
         RequireValue(rawRequestBody, nameof(rawRequestBody));
         RequireValue(secretKey, nameof(secretKey));
 
-        var bytes = Encoding.UTF8.GetBytes(secretKey + rawRequestBody);
-#if NET8_0_OR_GREATER
-        var hash = SHA512.HashData(bytes);
-#else
-        using var sha512 = SHA512.Create();
-        var hash = sha512.ComputeHash(bytes);
-#endif
+        using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey));
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(rawRequestBody));
         return ToLowerHex(hash);
     }
 

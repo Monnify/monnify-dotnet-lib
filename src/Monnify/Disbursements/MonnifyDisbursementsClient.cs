@@ -113,6 +113,15 @@ internal sealed class MonnifyDisbursementsClient : MonnifyHttpClientBase, IMonni
         return SendAsync<MonnifyPagedResult<DisbursementTransaction>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
+    public Task<MonnifyPagedResult<BulkTransferResult>> GetBulkTransfersAsync(
+        string? sourceAccountNumber = null, int pageNo = 0, int pageSize = 20, CancellationToken cancellationToken = default)
+    {
+        var query = new List<string> { $"pageNo={pageNo}", $"pageSize={pageSize}" };
+        AppendIfPresent(query, "sourceAccountNumber", sourceAccountNumber);
+        var path = $"{MonnifyApiPaths.Disbursements.Bulk.TransactionsBase}?{string.Join("&", query)}";
+        return SendAsync<MonnifyPagedResult<BulkTransferResult>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
     public Task<MonnifyPagedResult<DisbursementTransaction>> SearchTransactionsAsync(
         string sourceAccountNumber, DisbursementTransactionSearchFilter? filter = null,
         int pageNo = 0, int pageSize = 10, CancellationToken cancellationToken = default)

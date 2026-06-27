@@ -155,4 +155,44 @@ public class MonnifyDisbursementsClientBulkTransferTests
         var client = CreateClient(new FakeHttpMessageHandler());
         await Assert.ThrowsAsync<ArgumentException>(() => client.GetBulkTransferTransactionsAsync(batchReference!));
     }
+
+    [Fact]
+    public async Task GetBulkTransfersAsync_SendsGetToBulkBase_WithPagingAndOptionalSourceAccount()
+    {
+        var handler = new FakeHttpMessageHandler();
+        // Sample payload from a real sandbox call.
+        handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
+            { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
+              "responseBody": {
+                "content": [
+                  { "totalAmount": 50.00, "totalFee": 10.00, "batchReference": "it-disb-batch-1782553699",
+                    "transactionBatchReference": "MFDB98020260627104824000001JXBXV6", "batchStatus": "COMPLETED",
+                    "totalTransactionsCount": 1, "dateCreated": "2026-06-27T09:48:25.000+00:00" }
+                ],
+                "totalElements": 74, "totalPages": 25, "number": 0, "size": 3, "first": true, "last": false } }
+            """));
+        var client = CreateClient(handler);
+
+        var result = await client.GetBulkTransfersAsync("9988776655", pageNo: 0, pageSize: 3);
+
+        Assert.Equal("/api/v2/disbursements/bulk", handler.Requests[0].RequestUri!.AbsolutePath);
+        Assert.Equal("pageNo=0&pageSize=3&sourceAccountNumber=9988776655", handler.Requests[0].RequestUri!.Query.TrimStart('?'));
+        Assert.Single(result.Content);
+        Assert.Equal("COMPLETED", result.Content[0].BatchStatus);
+    }
+
+    [Fact]
+    public async Task GetBulkTransfersAsync_NoSourceAccount_OmitsItFromQuery()
+    {
+        var handler = new FakeHttpMessageHandler();
+        handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
+            { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
+              "responseBody": { "content": [], "totalElements": 0, "totalPages": 0, "number": 0, "size": 20, "first": true, "last": true } }
+            """));
+        var client = CreateClient(handler);
+
+        await client.GetBulkTransfersAsync();
+
+        Assert.Equal("pageNo=0&pageSize=20", handler.Requests[0].RequestUri!.Query.TrimStart('?'));
+    }
 }

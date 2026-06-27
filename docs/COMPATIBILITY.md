@@ -38,7 +38,7 @@ Status legend:
 | `IMonnifyDisbursementsClient.ResendBulkTransferOtpAsync` | `POST /api/v2/disbursements/batch/resend-otp` | **Implemented** | Body field is `batchReference` here (unlike the validate-otp endpoint above) |
 | `IMonnifyDisbursementsClient.GetBulkTransferSummaryAsync` | `GET /api/v2/disbursements/batch/summary?reference=` | **Implemented** | |
 | `IMonnifyDisbursementsClient.GetBulkTransferTransactionsAsync` | `GET /api/v2/disbursements/bulk/{batchReference}/transactions?pageSize=&pageNo=` | **Implemented** | |
-| *(Disbursements — list all bulk batches)* | `GET /api/v2/disbursements/bulk/transactions` | Planned | Documented, but returns 404 in the sandbox; left unimplemented pending Monnify confirmation of the correct path |
+| `IMonnifyDisbursementsClient.GetBulkTransfersAsync` | `GET /api/v2/disbursements/bulk?sourceAccountNumber=&pageNo=&pageSize=` | **Implemented** | Monnify's docs say `GET /api/v2/disbursements/bulk/transactions`, which 404s in the sandbox — the correct path has no `/transactions` suffix |
 | `IMonnifyDisbursementsClient.SearchTransactionsAsync` | `GET /api/v2/disbursements/search-transactions?sourceAccountNumber=&...` | **Implemented** | |
 | `IMonnifyDisbursementsClient.GetWalletBalanceAsync` | `GET /api/v2/disbursements/wallet-balance?accountNumber=` | **Implemented** | Sandbox returns plain numeric balances; Monnify's docs show them as quoted strings — `decimal` properties accept either via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyVerificationClient.ValidateAccountNumberAsync` | `GET /api/v1/disbursements/account/validate?accountNumber=&bankCode=` | **Implemented** | Free on both sandbox and live; `responseBody: {accountNumber, accountName, bankCode, currencyCode}` |
@@ -47,7 +47,7 @@ Status legend:
 | `IMonnifyVerificationClient.VerifyNinAsync` | `POST /api/v1/vas/nin-details` | **Implemented** | Live environment only; bills the merchant wallet per request |
 | `IMonnifyBanksClient.GetBanksAsync` | `GET /api/v1/banks` | **Implemented** | `responseBody` is a JSON array of `{name, code, nipBankCode, ussdTemplate, baseUssdCode, transferUssdTemplate}`; most entries have null USSD fields |
 | `IMonnifyBanksClient.GetUssdEnabledBanksAsync` | `GET /api/v1/sdk/transactions/banks` | **Implemented** | Subset of banks with USSD info; not every entry on this list has a populated `ussdTemplate` (e.g. Suntrust Bank) |
-| *(Webhooks — signature)* | `monnify-signature` header, `SHA-512(secretKey + rawBody)` | Planned | Phase 5 |
+| `MonnifyWebhookValidator.IsValid` / `ComputeSignature` | `monnify-signature` header | **Implemented** | `HMAC-SHA512(key: secretKey, message: rawRequestBody)`, lowercase hex. Monnify's docs prose says "SHA-512(secretKey + body)" (no HMAC), and their own JS sample pretty-prints the body before hashing — neither reproduces the "Hashed Value" the same docs page publishes. Verified against Monnify's documented sample secret/body/hash using the *compact* JSON form, which matches; their Java sample (unlike the JS one) hashes the compact form too |
 | *(Bills payment)* | TBD | Planned | Phase 6 |
 
 Update this table whenever a method moves from Planned to Implemented, or its

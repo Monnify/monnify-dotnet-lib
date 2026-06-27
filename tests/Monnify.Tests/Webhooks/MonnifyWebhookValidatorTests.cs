@@ -4,16 +4,21 @@ namespace Monnify.Tests.Webhooks;
 
 public class MonnifyWebhookValidatorTests
 {
-    private const string SecretKey = "test-secret-key";
-    private const string Body = """{"eventType":"SUCCESSFUL_TRANSACTION","eventData":{}}""";
+    // From Monnify's own webhooks documentation sample (secret key, body, and "Hashed Value").
+    // Note: Monnify's docs pretty-print the sample body with JSON.stringify(obj, null, 2) before
+    // hashing it, but that pretty-printed form does NOT reproduce their own published hash -
+    // only the compact form below does. Confirmed by running their exact sample code in Node.js.
+    private const string SecretKey = "91MUDL9N6U3BQRXBQ2PJ9M0PW4J22M1Y";
 
-    // Computed independently via Python's hashlib (sha512(secretKey + body)), not via this SDK,
-    // so this test actually proves the implementation matches the documented scheme.
+    private const string Body = """
+        {"eventData":{"product":{"reference":"111222333","type":"OFFLINE_PAYMENT_AGENT"},"transactionReference":"MNFY|76|20211117154810|000001","paymentReference":"0.01462001097368737","paidOn":"17/11/2021 3:48:10 PM","paymentDescription":"Mockaroo Jesse","metaData":{},"destinationAccountInformation":{},"paymentSourceInformation":{},"amountPaid":78000,"totalPayable":78000,"offlineProductInformation":{"code":"41470","type":"DYNAMIC"},"cardDetails":{},"paymentMethod":"CASH","currency":"NGN","settlementAmount":77600,"paymentStatus":"PAID","customer":{"name":"Mockaroo Jesse","email":"111222333@ZZAMZ4WT4Y3E.monnify"}},"eventType":"SUCCESSFUL_TRANSACTION"}
+        """;
+
     private const string ExpectedSignature =
-        "3a3f96ea7088a4297e04ba3f80f7e03c7aef24d998b033862100c8c9b5d2961166050a400929a1f1e87619db9060b0ef702d8810623e7050584dc7c082ca49e4";
+        "f04fb635e04d71648bd3cc7999003da6861483342c856d05ddfa9b2dafacb873b0de1d0f8f67405d0010b4348b721c49fa171d317972618debba6b638aedcd3c";
 
     [Fact]
-    public void ComputeSignature_MatchesIndependentlyComputedSha512()
+    public void ComputeSignature_MatchesMonnifysDocumentedSample()
     {
         var signature = MonnifyWebhookValidator.ComputeSignature(Body, SecretKey);
 
@@ -44,6 +49,24 @@ public class MonnifyWebhookValidatorTests
         var tamperedBody = Body.Replace("SUCCESSFUL_TRANSACTION", "FAILED_TRANSACTION");
 
         Assert.False(MonnifyWebhookValidator.IsValid(tamperedBody, ExpectedSignature, SecretKey));
+    }
+
+    [Fact]
+    public void IsValid_PrettyPrintedBody_DoesNotMatch_OnlyExactRawBodyDoes()
+    {
+        // Guards against re-serializing/re-formatting the body before validating - even though
+        // it's semantically the same JSON, a different byte representation produces a different
+        // signature. This is exactly the mistake in Monnify's own docs sample.
+        var prettyPrinted = """
+            {
+              "eventData": {
+                "product": { "reference": "111222333", "type": "OFFLINE_PAYMENT_AGENT" }
+              },
+              "eventType": "SUCCESSFUL_TRANSACTION"
+            }
+            """;
+
+        Assert.False(MonnifyWebhookValidator.IsValid(prettyPrinted, ExpectedSignature, SecretKey));
     }
 
     [Theory]
