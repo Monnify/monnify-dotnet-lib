@@ -20,6 +20,10 @@ Status legend:
 | `IMonnifyCollectionsClient.GetInvoiceAsync` | `GET /api/v1/invoice/{invoiceReference}/details` | **Implemented** | |
 | `IMonnifyCollectionsClient.GetInvoicesAsync` | `GET /api/v1/invoice/all?page=&size=` | **Implemented** | |
 | `IMonnifyCollectionsClient.CancelInvoiceAsync` | `DELETE /api/v1/invoice/{invoiceReference}/cancel` | **Implemented** | |
+| `IMonnifyCollectionsClient.InitiateBankTransferAsync` | `POST /api/v1/merchant/bank-transfer/init-payment` | **Implemented** | Generates a one-time dynamic account for an already-initialized transaction |
+| `IMonnifyCollectionsClient.SearchTransactionsAsync` | `GET /api/v1/transactions/search?page=&size=&...` | **Implemented** | Many optional filters (reference, amount range, customer, status, date range) |
+| `IMonnifyCollectionsClient.GetTransactionAsync` | `GET /api/v2/transactions/{transactionReference}` | **Implemented** | `amountPaid`/`totalPayable`/`settlementAmount` are quoted strings in this response; deserialized into `decimal` via `JsonNumberHandling.AllowReadingFromString` |
+| `IMonnifyCollectionsClient.QueryTransactionAsync` | `GET /api/v2/merchant/transactions/query?transactionReference=&paymentReference=` | **Implemented** | Same response shape as `GetTransactionAsync`; requires at least one of the two query parameters |
 | *(Collections — sub-accounts/splitting)* | TBD | Planned | Phase 3 follow-up |
 | *(Collections — direct debit/mandates)* | TBD | Planned | Phase 3 follow-up |
 | *(Collections — card tokenization)* | TBD | Planned | Phase 3 follow-up |

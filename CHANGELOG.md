@@ -39,3 +39,7 @@ own version is independent of Monnify's API versioning.
   `CancelInvoiceAsync`). Payment Links are dashboard-only and have no API, so
   they're out of scope. Sub-accounts/splitting, direct debit, and card
   tokenization are deferred to a follow-up.
+- `IMonnifyCollectionsClient`: `InitiateBankTransferAsync` (one-time dynamic
+  account for an initialized transaction), `SearchTransactionsAsync` (filtered,
+  paged transaction search), `GetTransactionAsync` and `QueryTransactionAsync`
+  (transaction status by Monnify reference or merchant payment reference).

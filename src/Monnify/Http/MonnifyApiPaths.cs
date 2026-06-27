@@ -35,5 +35,9 @@ internal static class MonnifyApiPaths
         public const string ReservedAccountsBaseV1 = "/api/v1/bank-transfer/reserved-accounts";
         public const string CreateInvoice = "/api/v1/invoice/create";
         public const string InvoiceBase = "/api/v1/invoice";
+        public const string InitiateBankTransfer = "/api/v1/merchant/bank-transfer/init-payment";
+        public const string SearchTransactions = "/api/v1/transactions/search";
+        public const string TransactionByReference = "/api/v2/transactions";
+        public const string QueryTransaction = "/api/v2/merchant/transactions/query";
     }
 }

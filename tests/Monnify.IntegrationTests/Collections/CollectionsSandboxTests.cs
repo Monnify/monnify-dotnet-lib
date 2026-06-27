@@ -94,4 +94,40 @@ public class CollectionsSandboxTests : IClassFixture<SandboxClientFixture>
         var cancelled = await client.CancelInvoiceAsync(reference);
         Assert.Equal("CANCELLED", cancelled.InvoiceStatus);
     }
+
+    [SkippableFact]
+    public async Task TransactionLookup_AgainstRealSandbox_InitiateBankTransferSearchGetAndQuery()
+    {
+        Skip.IfNot(CanRun, "Sandbox credentials/contract code are not set.");
+
+        var client = _fixture.Provider.GetRequiredService<IMonnifyCollectionsClient>();
+        var reference = $"it-lookup-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+
+        var initialized = await client.InitializeTransactionAsync(new InitializeTransactionRequest
+        {
+            Amount = 100,
+            CustomerName = "Ada Lovelace",
+            CustomerEmail = "ada@example.com",
+            PaymentReference = reference,
+            PaymentDescription = "Integration test lookup",
+            ContractCode = SandboxContractCode.Value!,
+            RedirectUrl = "https://example.com/callback",
+        });
+
+        var bankTransfer = await client.InitiateBankTransferAsync(new InitiateBankTransferRequest
+        {
+            TransactionReference = initialized.TransactionReference,
+        });
+        Assert.False(string.IsNullOrWhiteSpace(bankTransfer.AccountNumber));
+
+        var searchResults = await client.SearchTransactionsAsync(
+            new SearchTransactionsRequest { PaymentReference = reference }, page: 0, size: 5);
+        Assert.NotEmpty(searchResults.Content);
+
+        var fetched = await client.GetTransactionAsync(initialized.TransactionReference);
+        Assert.Equal(initialized.TransactionReference, fetched.TransactionReference);
+
+        var queried = await client.QueryTransactionAsync(paymentReference: reference);
+        Assert.Equal(reference, queried.PaymentReference);
+    }
 }

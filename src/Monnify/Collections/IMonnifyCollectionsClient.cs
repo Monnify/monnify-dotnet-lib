@@ -32,4 +32,19 @@ public interface IMonnifyCollectionsClient
     Task<MonnifyPagedResult<Invoice>> GetInvoicesAsync(int page = 0, int size = 10, CancellationToken cancellationToken = default);
 
     Task<Invoice> CancelInvoiceAsync(string invoiceReference, CancellationToken cancellationToken = default);
+
+    /// <summary>Generates a dynamic, single-use bank account for a one-time payment against an already-initialized transaction.</summary>
+    Task<BankTransferPaymentDetails> InitiateBankTransferAsync(
+        InitiateBankTransferRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Searches transactions on the integration, optionally filtered by reference, amount range, customer, status, or date range.</summary>
+    Task<MonnifyPagedResult<TransactionSummary>> SearchTransactionsAsync(
+        SearchTransactionsRequest? filter = null, int page = 0, int size = 10, CancellationToken cancellationToken = default);
+
+    /// <summary>Gets the status of a transaction by its Monnify-generated transaction reference.</summary>
+    Task<Transaction> GetTransactionAsync(string transactionReference, CancellationToken cancellationToken = default);
+
+    /// <summary>Gets the status of a transaction by either its Monnify transaction reference or the merchant's payment reference.</summary>
+    Task<Transaction> QueryTransactionAsync(
+        string? transactionReference = null, string? paymentReference = null, CancellationToken cancellationToken = default);
 }
