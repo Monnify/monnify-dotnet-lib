@@ -7,9 +7,22 @@ namespace Monnify.Disbursements;
 /// activated it for your merchant account (contact sales@monnify.com); until then, calls to the
 /// initiating methods fail with a 401/403 from Monnify.
 /// </summary>
+/// <remarks>
+/// This client is registered with automatic HTTP retry disabled: if a transfer-initiating call
+/// fails ambiguously (timeout, network error, 5xx), do not resend the same request. Instead, call
+/// <see cref="GetSingleTransferAsync"/> or <see cref="GetBulkTransferSummaryAsync"/> with the
+/// <em>same</em> reference to find out what actually happened. Only if that confirms the transfer
+/// never went through should you retry - and a retry must use a <em>new</em> reference, since
+/// Monnify treats <c>reference</c>/<c>batchReference</c> as an idempotency key: resending the same
+/// one either gets rejected as a duplicate or just returns the original (possibly still-failed)
+/// result, rather than giving the transfer a fresh attempt.
+/// </remarks>
 public interface IMonnifyDisbursementsClient
 {
-    /// <summary>Initiates a transfer to a bank account.</summary>
+    /// <summary>
+    /// Initiates a transfer to a bank account. See the remarks on <see cref="IMonnifyDisbursementsClient"/>
+    /// for how to safely retry after an ambiguous failure.
+    /// </summary>
     Task<SingleTransferResult> InitiateSingleTransferAsync(
         SingleTransferRequest request, CancellationToken cancellationToken = default);
 
@@ -25,7 +38,10 @@ public interface IMonnifyDisbursementsClient
     Task<MonnifyPagedResult<DisbursementTransaction>> GetSingleTransfersAsync(
         int pageNo = 0, int pageSize = 20, CancellationToken cancellationToken = default);
 
-    /// <summary>Initiates a batch of transfers.</summary>
+    /// <summary>
+    /// Initiates a batch of transfers. See the remarks on <see cref="IMonnifyDisbursementsClient"/>
+    /// for how to safely retry after an ambiguous failure.
+    /// </summary>
     Task<BulkTransferResult> InitiateBulkTransferAsync(BulkTransferRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>Authorizes a batch transfer that is awaiting OTP authorization.</summary>
