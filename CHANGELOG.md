@@ -74,4 +74,27 @@ own version is independent of Monnify's API versioning.
   hash (not HMAC) and their JS sample pretty-prints the body before hashing —
   neither reproduces the "Hashed Value" published on the same docs page; only
   hashing the *compact* JSON form with HMAC-SHA512 does, which is what their
-  own Java sample does and what this validator implements.
+  own Java sample does and what this validator implements. Monnify's sandbox
+  sends no `monnify-signature` header at all, so `IsValid` always returns
+  `false` for sandbox webhook traffic by design — there is intentionally no
+  environment-aware bypass for this check.
+- `MonnifyWebhookEnvelope` and `MonnifyWebhookParser` (`Parse`,
+  `ParseEventData<T>`, `ParseMetaData<T>`), plus typed event-data classes for
+  all 12 documented webhook event types: `CollectionTransactionEventData`
+  (covers both a regular collection payment and an offline/agent payment),
+  `DisbursementStatusEventData` (shared by the successful/failed/reversed
+  disbursement events), `RefundEventData` (shared by the successful/failed
+  refund events), `SettlementEventData`, `MandateStatusEventData`,
+  `WalletActivityEventData`, `LowBalanceAlertEventData`, and
+  `RejectedPaymentEventData`. Modeled directly from Monnify's own documented
+  sample payloads, which surfaced several real shape inconsistencies handled
+  defensively rather than assumed away: `paymentSourceInformation` arrives as
+  an array, an empty object, or a single populated object depending on the
+  event variant (`SingleOrArrayJsonConverter`); several amount fields are
+  sometimes quoted strings and sometimes numbers; the rejected-payment event
+  uses `created_on` where every other event uses `createdOn`; the wallet
+  activity event nests `metaData` as a sibling of `eventData` at the envelope
+  root rather than inside it.
+- `HttpRequest.ValidateMonnifyWebhookAsync(secretKey, ct)`: an ASP.NET Core
+  convenience that reads the request body once, verifies its signature, and
+  returns a result exposing `IsValid`, `RawBody`, and `GetEnvelope()`.

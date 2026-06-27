@@ -10,11 +10,21 @@ namespace Monnify.Webhooks;
 /// Treat an IP allowlist as defense-in-depth at most, since Monnify's sending IP can change;
 /// signature verification is the primary control.
 /// </summary>
+/// <remarks>
+/// Monnify's sandbox does not send a <c>monnify-signature</c> header at all, so
+/// <see cref="IsValid"/> correctly returns <see langword="false"/> for sandbox webhook traffic -
+/// this is not a bug. There is deliberately no environment-aware bypass here: a security check
+/// that silently skips itself based on a flag is a worse failure mode than a test webhook
+/// receiver rejecting everything. If you need to exercise your webhook handler against sandbox,
+/// branch on your own environment in your own code rather than expecting this validator to do it.
+/// </remarks>
 public static class MonnifyWebhookValidator
 {
     /// <summary>
     /// Computes the expected signature for a webhook body and compares it against the
-    /// <c>monnify-signature</c> header value using a constant-time comparison.
+    /// <c>monnify-signature</c> header value using a constant-time comparison. Returns
+    /// <see langword="false"/> if the header is missing, which is always the case in Monnify's
+    /// sandbox - see the remarks on <see cref="MonnifyWebhookValidator"/>.
     /// </summary>
     /// <param name="rawRequestBody">The exact, unmodified request body bytes/text Monnify sent - re-serializing a parsed object will not match.</param>
     /// <param name="signatureHeader">The value of the <c>monnify-signature</c> request header.</param>
