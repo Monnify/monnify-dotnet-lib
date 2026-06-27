@@ -15,7 +15,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
             throw new ArgumentNullException(nameof(request));
         }
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.InitializeTransaction)
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Transactions.Initialize)
         {
             Content = CreateJsonContent(request),
         };
@@ -30,7 +30,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
             throw new ArgumentNullException(nameof(request));
         }
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.ReservedAccountsBase)
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.ReservedAccounts.Base)
         {
             Content = CreateJsonContent(request),
         };
@@ -40,7 +40,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
     public Task<ReservedAccount> GetReservedAccountAsync(string accountReference, CancellationToken cancellationToken = default)
     {
         RequireValue(accountReference, nameof(accountReference));
-        var path = $"{MonnifyApiPaths.Collections.ReservedAccountsBase}/{Uri.EscapeDataString(accountReference)}";
+        var path = $"{MonnifyApiPaths.Collections.ReservedAccounts.Base}/{Uri.EscapeDataString(accountReference)}";
         return SendAsync<ReservedAccount>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
@@ -48,7 +48,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         string accountReference, int page = 0, int size = 10, CancellationToken cancellationToken = default)
     {
         RequireValue(accountReference, nameof(accountReference));
-        var path = $"{MonnifyApiPaths.Collections.ReservedAccountsBaseV1}/transactions" +
+        var path = $"{MonnifyApiPaths.Collections.ReservedAccounts.BaseV1}/transactions" +
                    $"?accountReference={Uri.EscapeDataString(accountReference)}&page={page}&size={size}";
         return SendAsync<MonnifyPagedResult<ReservedAccountTransaction>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
@@ -56,7 +56,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
     public Task<ReservedAccount> DeleteReservedAccountAsync(string accountReference, CancellationToken cancellationToken = default)
     {
         RequireValue(accountReference, nameof(accountReference));
-        var path = $"{MonnifyApiPaths.Collections.ReservedAccountsBaseV1}/reference/{Uri.EscapeDataString(accountReference)}";
+        var path = $"{MonnifyApiPaths.Collections.ReservedAccounts.BaseV1}/reference/{Uri.EscapeDataString(accountReference)}";
         return SendAsync<ReservedAccount>(new HttpRequestMessage(HttpMethod.Delete, path), cancellationToken);
     }
 
@@ -67,7 +67,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
             throw new ArgumentNullException(nameof(request));
         }
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.CreateInvoice)
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Invoices.Create)
         {
             Content = CreateJsonContent(request),
         };
@@ -77,20 +77,20 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
     public Task<Invoice> GetInvoiceAsync(string invoiceReference, CancellationToken cancellationToken = default)
     {
         RequireValue(invoiceReference, nameof(invoiceReference));
-        var path = $"{MonnifyApiPaths.Collections.InvoiceBase}/{Uri.EscapeDataString(invoiceReference)}/details";
+        var path = $"{MonnifyApiPaths.Collections.Invoices.Base}/{Uri.EscapeDataString(invoiceReference)}/details";
         return SendAsync<Invoice>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
     public Task<MonnifyPagedResult<Invoice>> GetInvoicesAsync(int page = 0, int size = 10, CancellationToken cancellationToken = default)
     {
-        var path = $"{MonnifyApiPaths.Collections.InvoiceBase}/all?page={page}&size={size}";
+        var path = $"{MonnifyApiPaths.Collections.Invoices.Base}/all?page={page}&size={size}";
         return SendAsync<MonnifyPagedResult<Invoice>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
     public Task<Invoice> CancelInvoiceAsync(string invoiceReference, CancellationToken cancellationToken = default)
     {
         RequireValue(invoiceReference, nameof(invoiceReference));
-        var path = $"{MonnifyApiPaths.Collections.InvoiceBase}/{Uri.EscapeDataString(invoiceReference)}/cancel";
+        var path = $"{MonnifyApiPaths.Collections.Invoices.Base}/{Uri.EscapeDataString(invoiceReference)}/cancel";
         return SendAsync<Invoice>(new HttpRequestMessage(HttpMethod.Delete, path), cancellationToken);
     }
 
@@ -102,7 +102,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
             throw new ArgumentNullException(nameof(request));
         }
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.InitiateBankTransfer)
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Transactions.InitiateBankTransfer)
         {
             Content = CreateJsonContent(request),
         };
@@ -127,14 +127,14 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
             AppendIfPresent(query, "to", filter.To?.ToString(CultureInfo.InvariantCulture));
         }
 
-        var path = $"{MonnifyApiPaths.Collections.SearchTransactions}?{string.Join("&", query)}";
+        var path = $"{MonnifyApiPaths.Collections.Transactions.Search}?{string.Join("&", query)}";
         return SendAsync<MonnifyPagedResult<TransactionSummary>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
     public Task<Transaction> GetTransactionAsync(string transactionReference, CancellationToken cancellationToken = default)
     {
         RequireValue(transactionReference, nameof(transactionReference));
-        var path = $"{MonnifyApiPaths.Collections.TransactionByReference}/{Uri.EscapeDataString(transactionReference)}";
+        var path = $"{MonnifyApiPaths.Collections.Transactions.ByReference}/{Uri.EscapeDataString(transactionReference)}";
         return SendAsync<Transaction>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
@@ -149,7 +149,7 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         var query = new List<string>();
         AppendIfPresent(query, "transactionReference", transactionReference);
         AppendIfPresent(query, "paymentReference", paymentReference);
-        var path = $"{MonnifyApiPaths.Collections.QueryTransaction}?{string.Join("&", query)}";
+        var path = $"{MonnifyApiPaths.Collections.Transactions.Query}?{string.Join("&", query)}";
         return SendAsync<Transaction>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 

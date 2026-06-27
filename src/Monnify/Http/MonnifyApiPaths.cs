@@ -30,14 +30,25 @@ internal static class MonnifyApiPaths
 
     internal static class Collections
     {
-        public const string InitializeTransaction = "/api/v1/merchant/transactions/init-transaction";
-        public const string ReservedAccountsBase = "/api/v2/bank-transfer/reserved-accounts";
-        public const string ReservedAccountsBaseV1 = "/api/v1/bank-transfer/reserved-accounts";
-        public const string CreateInvoice = "/api/v1/invoice/create";
-        public const string InvoiceBase = "/api/v1/invoice";
-        public const string InitiateBankTransfer = "/api/v1/merchant/bank-transfer/init-payment";
-        public const string SearchTransactions = "/api/v1/transactions/search";
-        public const string TransactionByReference = "/api/v2/transactions";
-        public const string QueryTransaction = "/api/v2/merchant/transactions/query";
+        internal static class Transactions
+        {
+            public const string Initialize = "/api/v1/merchant/transactions/init-transaction";
+            public const string InitiateBankTransfer = "/api/v1/merchant/bank-transfer/init-payment";
+            public const string Search = "/api/v1/transactions/search";
+            public const string ByReference = "/api/v2/transactions";
+            public const string Query = "/api/v2/merchant/transactions/query";
+        }
+
+        internal static class ReservedAccounts
+        {
+            public const string Base = "/api/v2/bank-transfer/reserved-accounts";
+            public const string BaseV1 = "/api/v1/bank-transfer/reserved-accounts";
+        }
+
+        internal static class Invoices
+        {
+            public const string Create = "/api/v1/invoice/create";
+            public const string Base = "/api/v1/invoice";
+        }
     }
 }
