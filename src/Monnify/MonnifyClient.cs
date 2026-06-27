@@ -1,4 +1,5 @@
 using Monnify.Banks;
+using Monnify.Bills;
 using Monnify.Collections;
 using Monnify.Disbursements;
 using Monnify.Verification;
@@ -16,12 +17,14 @@ public sealed class MonnifyClient
         IMonnifyBanksClient banks,
         IMonnifyVerificationClient verification,
         IMonnifyCollectionsClient collections,
-        IMonnifyDisbursementsClient disbursements)
+        IMonnifyDisbursementsClient disbursements,
+        IMonnifyBillsClient bills)
     {
         Banks = banks;
         Verification = verification;
         Collections = collections;
         Disbursements = disbursements;
+        Bills = bills;
     }
 
     public IMonnifyBanksClient Banks { get; }
@@ -31,4 +34,6 @@ public sealed class MonnifyClient
     public IMonnifyCollectionsClient Collections { get; }
 
     public IMonnifyDisbursementsClient Disbursements { get; }
+
+    public IMonnifyBillsClient Bills { get; }
 }

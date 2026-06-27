@@ -5,9 +5,9 @@
 
 An idiomatic, community-maintained .NET SDK for the
 [Monnify](https://developers.monnify.com) payment gateway API — collections,
-disbursements, verification, banks, and webhook signature validation —
-targeting `netstandard2.0` and `net8.0`. This is not an official Monnify
-project.
+disbursements, bills payment, verification, banks, and webhook signature
+validation — targeting `netstandard2.0` and `net8.0`. This is not an official
+Monnify project.
 
 > **Status: pre-release / under active development.** See
 > [implementation phasing](#status) below and
@@ -25,7 +25,7 @@ code:
 - [x] Phase 3 — collections client
 - [x] Phase 4 — disbursements client
 - [x] Phase 5 — webhooks
-- [ ] Phase 6 — bills payment
+- [x] Phase 6 — bills payment (unverified against sandbox — see docs/COMPATIBILITY.md)
 - [ ] Phase 7 — samples + quickstarts (this README gets filled in here)
 - [ ] Phase 8 — CI/CD + first NuGet release
 

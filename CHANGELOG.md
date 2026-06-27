@@ -98,3 +98,19 @@ own version is independent of Monnify's API versioning.
 - `HttpRequest.ValidateMonnifyWebhookAsync(secretKey, ct)`: an ASP.NET Core
   convenience that reads the request body once, verifies its signature, and
   returns a result exposing `IsValid`, `RawBody`, and `GetEnvelope()`.
+- `IMonnifyBillsClient` (Bills payment - airtime, data, cable TV, electricity,
+  etc.): `GetBillerCategoriesAsync`, `GetBillersAsync`, `GetBillerProductsAsync`,
+  `ValidateCustomerAsync`, `VendAsync`, `RequeryAsync`. Built directly from
+  Monnify's documented request/response samples, since Bills payment is not
+  active by default for any merchant account (email
+  integration-support@monnify.com to activate it) and so could not be
+  sandbox-verified — see `docs/COMPATIBILITY.md` for which specific details
+  are inferred rather than confirmed. Registered with automatic retry
+  disabled, same reasoning as Disbursements: `VendAsync` moves money, so an
+  ambiguous failure must be resolved via `RequeryAsync` with the same
+  reference, not retried blindly. The three list endpoints default to
+  1-based paging (`page=1`), unlike every other paginated list in this SDK -
+  that's Monnify's own documented default for this category specifically.
+  `MonnifyPagedResult<T>` gained two new nullable fields (`IsEmpty`,
+  `NextPage`) to capture the slightly different pagination shape Bills uses
+  compared to Disbursements/Collections.

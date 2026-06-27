@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Monnify.Authentication;
+using Monnify.Bills;
 using Monnify.Disbursements;
 
 namespace Monnify.Tests;
@@ -111,6 +112,24 @@ public class ServiceCollectionExtensionsTests
     }
 
     [Fact]
+    public void AddMonnify_ResolvesBillsClient_WithRetryDisabled_WithoutThrowing()
+    {
+        // Bills registers with allowAutomaticRetry: false too, same reasoning as Disbursements:
+        // VendAsync moves money, so confirm the resilience pipeline accepts this at resolution time.
+        var services = new ServiceCollection();
+        services.AddMonnify(o =>
+        {
+            o.ApiKey = "key";
+            o.SecretKey = "secret";
+        });
+        using var provider = services.BuildServiceProvider();
+
+        var client = provider.GetRequiredService<IMonnifyBillsClient>();
+
+        Assert.NotNull(client);
+    }
+
+    [Fact]
     public void AddMonnify_ResolvesMonnifyClientFacade_WithEveryTypedClient()
     {
         var services = new ServiceCollection();
@@ -127,5 +146,6 @@ public class ServiceCollectionExtensionsTests
         Assert.NotNull(facade.Verification);
         Assert.NotNull(facade.Collections);
         Assert.NotNull(facade.Disbursements);
+        Assert.NotNull(facade.Bills);
     }
 }

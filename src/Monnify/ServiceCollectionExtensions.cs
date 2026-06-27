@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Monnify.Authentication;
 using Monnify.Banks;
+using Monnify.Bills;
 using Monnify.Collections;
 using Monnify.Disbursements;
 using Monnify.Http;
@@ -53,6 +54,11 @@ public static class ServiceCollectionExtensions
         // resolved by querying status with the same reference, not by blindly resending the same
         // request (which risks a double disbursement).
         services.AddHttpClient<IMonnifyDisbursementsClient, MonnifyDisbursementsClient>(ConfigureBaseAddress)
+            .AddMonnifyDefaults(allowAutomaticRetry: false);
+
+        // allowAutomaticRetry: false - VendAsync moves money, same reasoning as Disbursements above:
+        // an ambiguous failure must be resolved via RequeryAsync with the same reference, not retried.
+        services.AddHttpClient<IMonnifyBillsClient, MonnifyBillsClient>(ConfigureBaseAddress)
             .AddMonnifyDefaults(allowAutomaticRetry: false);
 
         services.AddTransient<MonnifyClient>();

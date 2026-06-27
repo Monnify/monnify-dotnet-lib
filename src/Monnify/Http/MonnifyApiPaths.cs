@@ -75,4 +75,14 @@ internal static class MonnifyApiPaths
         public const string SearchTransactions = "/api/v2/disbursements/search-transactions";
         public const string WalletBalance = "/api/v2/disbursements/wallet-balance";
     }
+
+    internal static class Bills
+    {
+        public const string BillerCategories = "/api/v1/vas/bills-payment/biller-categories";
+        public const string Billers = "/api/v1/vas/bills-payment/billers";
+        public const string BillerProducts = "/api/v1/vas/bills-payment/biller-products";
+        public const string Vend = "/api/v1/vas/bills-payment/vend";
+        public const string Requery = "/api/v1/vas/bills-payment/requery";
+        public const string ValidateCustomer = "/api/v1/vas/bills-payment/validate-customer";
+    }
 }
