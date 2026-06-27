@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Monnify.Authentication;
 using Monnify.Banks;
 using Monnify.Collections;
+using Monnify.Disbursements;
 using Monnify.Http;
 using Monnify.Verification;
 
@@ -47,6 +48,12 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<IMonnifyBanksClient, MonnifyBanksClient>(ConfigureBaseAddress).AddMonnifyDefaults();
         services.AddHttpClient<IMonnifyVerificationClient, MonnifyVerificationClient>(ConfigureBaseAddress).AddMonnifyDefaults();
         services.AddHttpClient<IMonnifyCollectionsClient, MonnifyCollectionsClient>(ConfigureBaseAddress).AddMonnifyDefaults();
+
+        // allowAutomaticRetry: false - an ambiguous failure on a transfer-initiating call must be
+        // resolved by querying status with the same reference, not by blindly resending the same
+        // request (which risks a double disbursement).
+        services.AddHttpClient<IMonnifyDisbursementsClient, MonnifyDisbursementsClient>(ConfigureBaseAddress)
+            .AddMonnifyDefaults(allowAutomaticRetry: false);
 
         services.AddTransient<MonnifyClient>();
 

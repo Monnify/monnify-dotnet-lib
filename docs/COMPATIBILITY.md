@@ -28,9 +28,19 @@ Status legend:
 | *(Collections — direct debit/mandates)* | TBD | Planned | Phase 3 follow-up |
 | *(Collections — card tokenization)* | TBD | Planned | Phase 3 follow-up |
 | *(Collections — Payment Links)* | N/A | Out of scope | Dashboard-only feature, no API |
-| *(Disbursements — single transfer)* | `POST /api/v2/disbursements/single` | Planned | Phase 4 |
-| *(Disbursements — bulk transfer)* | `POST /api/v2/disbursements/batch` | Planned | Phase 4 |
-| *(Disbursements — wallet balance)* | `GET /api/v2/disbursements/wallet-balance` | Planned | Phase 4 |
+| `IMonnifyDisbursementsClient.InitiateSingleTransferAsync` | `POST /api/v2/disbursements/single` | **Implemented** | Requires Monnify to have activated the Transfer feature for the merchant (contact sales@monnify.com); registered with automatic retry disabled |
+| `IMonnifyDisbursementsClient.AuthorizeSingleTransferAsync` | `POST /api/v2/disbursements/single/validate-otp` | **Implemented** | Authorizes a transfer with status `PENDING_AUTHORIZATION` |
+| `IMonnifyDisbursementsClient.ResendSingleTransferOtpAsync` | `POST /api/v2/disbursements/single/resend-otp` | **Implemented** | |
+| `IMonnifyDisbursementsClient.GetSingleTransferAsync` | `GET /api/v2/disbursements/single/summary?reference=` | **Implemented** | |
+| `IMonnifyDisbursementsClient.GetSingleTransfersAsync` | `GET /api/v2/disbursements/single/transactions?pageNo=&pageSize=` | **Implemented** | |
+| `IMonnifyDisbursementsClient.InitiateBulkTransferAsync` | `POST /api/v2/disbursements/batch` | **Implemented** | Response includes an extra `transactionBatchReference` (Monnify's own internal batch id) not shown in the official docs sample; registered with automatic retry disabled |
+| `IMonnifyDisbursementsClient.AuthorizeBulkTransferAsync` | `POST /api/v2/disbursements/batch/validate-otp` | **Implemented** | Despite being the *batch* endpoint, the body field is `reference`, not `batchReference` |
+| `IMonnifyDisbursementsClient.ResendBulkTransferOtpAsync` | `POST /api/v2/disbursements/batch/resend-otp` | **Implemented** | Body field is `batchReference` here (unlike the validate-otp endpoint above) |
+| `IMonnifyDisbursementsClient.GetBulkTransferSummaryAsync` | `GET /api/v2/disbursements/batch/summary?reference=` | **Implemented** | |
+| `IMonnifyDisbursementsClient.GetBulkTransferTransactionsAsync` | `GET /api/v2/disbursements/bulk/{batchReference}/transactions` | **Implemented** | |
+| *(Disbursements — list all bulk batches)* | `GET /api/v2/disbursements/bulk/transactions` | Planned | Documented, but returns 404 in the sandbox; left unimplemented pending Monnify confirmation of the correct path |
+| `IMonnifyDisbursementsClient.SearchTransactionsAsync` | `GET /api/v2/disbursements/search-transactions?sourceAccountNumber=&...` | **Implemented** | |
+| `IMonnifyDisbursementsClient.GetWalletBalanceAsync` | `GET /api/v2/disbursements/wallet-balance?accountNumber=` | **Implemented** | Sandbox returns plain numeric balances; Monnify's docs show them as quoted strings — `decimal` properties accept either via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyVerificationClient.ValidateAccountNumberAsync` | `GET /api/v1/disbursements/account/validate?accountNumber=&bankCode=` | **Implemented** | Free on both sandbox and live; `responseBody: {accountNumber, accountName, bankCode, currencyCode}` |
 | `IMonnifyVerificationClient.MatchBvnDetailsAsync` | `POST /api/v1/vas/bvn-details-match` | **Implemented** | Bills the merchant wallet per request; response shape mixes a structured match object (`name`) with plain match-status strings (`dateOfBirth`, `mobileNo`) |
 | `IMonnifyVerificationClient.MatchBvnToAccountAsync` | `POST /api/v1/vas/bvn-account-match` | **Implemented** | Bills the merchant wallet per request |

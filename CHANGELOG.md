@@ -51,3 +51,15 @@ own version is independent of Monnify's API versioning.
   account for an initialized transaction), `SearchTransactionsAsync` (filtered,
   paged transaction search), `GetTransactionAsync` and `QueryTransactionAsync`
   (transaction status by Monnify reference or merchant payment reference).
+- `IMonnifyDisbursementsClient`: single transfers (`InitiateSingleTransferAsync`,
+  `AuthorizeSingleTransferAsync`, `ResendSingleTransferOtpAsync`,
+  `GetSingleTransferAsync`, `GetSingleTransfersAsync`), bulk transfers
+  (`InitiateBulkTransferAsync`, `AuthorizeBulkTransferAsync`,
+  `ResendBulkTransferOtpAsync`, `GetBulkTransferSummaryAsync`,
+  `GetBulkTransferTransactionsAsync`), plus `SearchTransactionsAsync` and
+  `GetWalletBalanceAsync`. The Transfer feature requires Monnify to activate it
+  for the merchant first (contact sales@monnify.com). Registered with automatic
+  retry disabled: an ambiguous failure on a transfer-initiating call must be
+  resolved by querying status with the same reference, not by resending the
+  request, to avoid a double disbursement. `AddMonnifyDefaults` now takes an
+  `allowAutomaticRetry` flag to support this per-client.

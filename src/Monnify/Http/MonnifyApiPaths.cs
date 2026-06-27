@@ -51,4 +51,28 @@ internal static class MonnifyApiPaths
             public const string Base = "/api/v1/invoice";
         }
     }
+
+    internal static class Disbursements
+    {
+        internal static class Single
+        {
+            public const string Initiate = "/api/v2/disbursements/single";
+            public const string ValidateOtp = "/api/v2/disbursements/single/validate-otp";
+            public const string ResendOtp = "/api/v2/disbursements/single/resend-otp";
+            public const string Summary = "/api/v2/disbursements/single/summary";
+            public const string Transactions = "/api/v2/disbursements/single/transactions";
+        }
+
+        internal static class Bulk
+        {
+            public const string Initiate = "/api/v2/disbursements/batch";
+            public const string ValidateOtp = "/api/v2/disbursements/batch/validate-otp";
+            public const string ResendOtp = "/api/v2/disbursements/batch/resend-otp";
+            public const string Summary = "/api/v2/disbursements/batch/summary";
+            public const string TransactionsBase = "/api/v2/disbursements/bulk";
+        }
+
+        public const string SearchTransactions = "/api/v2/disbursements/search-transactions";
+        public const string WalletBalance = "/api/v2/disbursements/wallet-balance";
+    }
 }

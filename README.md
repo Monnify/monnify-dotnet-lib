@@ -23,7 +23,7 @@ code:
 - [x] Phase 1 — core HTTP + authentication infrastructure
 - [x] Phase 2 — verification + banks clients
 - [x] Phase 3 — collections client
-- [ ] Phase 4 — disbursements client
+- [x] Phase 4 — disbursements client
 - [ ] Phase 5 — webhooks
 - [ ] Phase 6 — bills payment
 - [ ] Phase 7 — samples + quickstarts (this README gets filled in here)

@@ -19,7 +19,14 @@ this category entirely via `--filter "Category!=Sandbox"`.
    ```
    export MONNIFY_SANDBOX_API_KEY=your-sandbox-api-key
    export MONNIFY_SANDBOX_SECRET_KEY=your-sandbox-secret-key
+   export MONNIFY_SANDBOX_CONTRACT_CODE=your-contract-code
+   export MONNIFY_SANDBOX_DISBURSEMENT_WALLET=your-wallet-account-number
+   export MONNIFY_SANDBOX_DISBURSEMENT_DESTINATION_BANK_CODE=a-real-bank-code
+   export MONNIFY_SANDBOX_DISBURSEMENT_DESTINATION_ACCOUNT=a-real-account-number
    ```
+
+   The Disbursements tests need a real, name-enquiry-resolvable destination account — a made-up
+   account number gets rejected by Monnify's own validation before a transfer is even created.
 
 3. From the repo root:
 
