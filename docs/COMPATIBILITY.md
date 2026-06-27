@@ -37,7 +37,7 @@ Status legend:
 | `IMonnifyDisbursementsClient.AuthorizeBulkTransferAsync` | `POST /api/v2/disbursements/batch/validate-otp` | **Implemented** | Despite being the *batch* endpoint, the body field is `reference`, not `batchReference` |
 | `IMonnifyDisbursementsClient.ResendBulkTransferOtpAsync` | `POST /api/v2/disbursements/batch/resend-otp` | **Implemented** | Body field is `batchReference` here (unlike the validate-otp endpoint above) |
 | `IMonnifyDisbursementsClient.GetBulkTransferSummaryAsync` | `GET /api/v2/disbursements/batch/summary?reference=` | **Implemented** | |
-| `IMonnifyDisbursementsClient.GetBulkTransferTransactionsAsync` | `GET /api/v2/disbursements/bulk/{batchReference}/transactions` | **Implemented** | |
+| `IMonnifyDisbursementsClient.GetBulkTransferTransactionsAsync` | `GET /api/v2/disbursements/bulk/{batchReference}/transactions?pageSize=&pageNo=` | **Implemented** | |
 | *(Disbursements — list all bulk batches)* | `GET /api/v2/disbursements/bulk/transactions` | Planned | Documented, but returns 404 in the sandbox; left unimplemented pending Monnify confirmation of the correct path |
 | `IMonnifyDisbursementsClient.SearchTransactionsAsync` | `GET /api/v2/disbursements/search-transactions?sourceAccountNumber=&...` | **Implemented** | |
 | `IMonnifyDisbursementsClient.GetWalletBalanceAsync` | `GET /api/v2/disbursements/wallet-balance?accountNumber=` | **Implemented** | Sandbox returns plain numeric balances; Monnify's docs show them as quoted strings — `decimal` properties accept either via `JsonNumberHandling.AllowReadingFromString` |

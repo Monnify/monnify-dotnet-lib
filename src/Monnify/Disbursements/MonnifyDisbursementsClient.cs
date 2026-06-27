@@ -105,10 +105,11 @@ internal sealed class MonnifyDisbursementsClient : MonnifyHttpClientBase, IMonni
     }
 
     public Task<MonnifyPagedResult<DisbursementTransaction>> GetBulkTransferTransactionsAsync(
-        string batchReference, CancellationToken cancellationToken = default)
+        string batchReference, int pageNo = 0, int pageSize = 20, CancellationToken cancellationToken = default)
     {
         RequireValue(batchReference, nameof(batchReference));
-        var path = $"{MonnifyApiPaths.Disbursements.Bulk.TransactionsBase}/{Uri.EscapeDataString(batchReference)}/transactions";
+        var path = $"{MonnifyApiPaths.Disbursements.Bulk.TransactionsBase}/{Uri.EscapeDataString(batchReference)}/transactions" +
+                   $"?pageSize={pageSize}&pageNo={pageNo}";
         return SendAsync<MonnifyPagedResult<DisbursementTransaction>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 

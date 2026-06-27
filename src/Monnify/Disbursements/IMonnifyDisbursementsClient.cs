@@ -38,7 +38,7 @@ public interface IMonnifyDisbursementsClient
     Task<BatchSummary> GetBulkTransferSummaryAsync(string batchReference, CancellationToken cancellationToken = default);
 
     Task<MonnifyPagedResult<DisbursementTransaction>> GetBulkTransferTransactionsAsync(
-        string batchReference, CancellationToken cancellationToken = default);
+        string batchReference, int pageNo = 0, int pageSize = 20, CancellationToken cancellationToken = default);
 
     /// <summary>Searches disbursement transactions on the given wallet, optionally filtered by date range or amount range.</summary>
     Task<MonnifyPagedResult<DisbursementTransaction>> SearchTransactionsAsync(

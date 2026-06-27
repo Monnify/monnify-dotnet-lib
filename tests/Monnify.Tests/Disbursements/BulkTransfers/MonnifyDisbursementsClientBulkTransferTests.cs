@@ -138,9 +138,10 @@ public class MonnifyDisbursementsClientBulkTransferTests
             """));
         var client = CreateClient(handler);
 
-        var result = await client.GetBulkTransferTransactionsAsync("disb-batch-test-1782549335");
+        var result = await client.GetBulkTransferTransactionsAsync("disb-batch-test-1782549335", pageNo: 0, pageSize: 10);
 
         Assert.Equal("/api/v2/disbursements/bulk/disb-batch-test-1782549335/transactions", handler.Requests[0].RequestUri!.AbsolutePath);
+        Assert.Equal("pageSize=10&pageNo=0", handler.Requests[0].RequestUri!.Query.TrimStart('?'));
         Assert.Single(result.Content);
         Assert.Equal("FAILED", result.Content[0].Status);
         Assert.Null(result.Content[0].DestinationAccountName);
