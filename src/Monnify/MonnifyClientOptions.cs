@@ -26,7 +26,7 @@ public sealed class MonnifyClientOptions
 
     internal Uri EffectiveBaseUrl => BaseUrl ?? DefaultBaseUrlFor(Environment);
 
-    /// <summary>Returns Monnify's documented base URL for the given environment.</summary>
+    /// <summary>Returns our documented base URL for the given environment.</summary>
     public static Uri DefaultBaseUrlFor(MonnifyEnvironment environment) => environment switch
     {
         MonnifyEnvironment.Live => new Uri("https://api.monnify.com"),

@@ -43,7 +43,7 @@ public class MonnifyDisbursementsClientSharedTests
     {
         var handler = new FakeHttpMessageHandler();
         // Sample payload from a real sandbox call - note availableBalance/ledgerBalance come back
-        // as plain JSON numbers here, even though Monnify's own docs show them quoted as strings.
+        // as plain JSON numbers here, even though our own docs show them quoted as strings.
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
             { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
               "responseBody": { "availableBalance": 3284590355.36, "ledgerBalance": 3284590355.36 } }
@@ -60,7 +60,7 @@ public class MonnifyDisbursementsClientSharedTests
     [Fact]
     public async Task GetWalletBalanceAsync_AcceptsQuotedStringBalance()
     {
-        // Per Monnify's own documented sample for this endpoint.
+        // Per our own documented sample for this endpoint.
         var handler = new FakeHttpMessageHandler();
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
             { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",

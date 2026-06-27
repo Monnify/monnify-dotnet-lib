@@ -10,15 +10,25 @@ public sealed class ValidateBillCustomerResult
     [JsonPropertyName("customerName")]
     public string? CustomerName { get; set; }
 
+    /// <summary>
+    /// Use <see cref="VendInstruction.ValidationReference"/> (nested here), not a top-level field -
+    /// confirmed against a real sandbox response. Our docs sample only showed the "no reference
+    /// required" case, which doesn't reveal where the reference actually lives.
+    /// </summary>
     [JsonPropertyName("vendInstruction")]
     public VendInstruction? VendInstruction { get; set; }
 
     /// <summary>
-    /// Inferred, not confirmed: Monnify's docs describe a <c>validationReference</c> obtained from
-    /// this endpoint for use in <c>VendAsync</c> when <see cref="VendInstruction.RequireValidationRef"/>
-    /// is true, but the only response sample available when this was written used the
-    /// "without a required reference" example variant, which omits this field entirely.
+    /// Present for at least some OPEN-priced products (confirmed via a real sandbox electricity
+    /// prepaid validation) - not in our documented sample, which only covered a fixed-price
+    /// airtime product.
     /// </summary>
-    [JsonPropertyName("validationReference")]
-    public string? ValidationReference { get; set; }
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    [JsonPropertyName("minAmount")]
+    public decimal? MinAmount { get; set; }
+
+    /// <summary>See the remarks on <see cref="MinAmount"/>.</summary>
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    [JsonPropertyName("maxAmount")]
+    public decimal? MaxAmount { get; set; }
 }

@@ -6,7 +6,7 @@ namespace Monnify.Webhooks;
 /// <summary>Event data for <see cref="MonnifyWebhookEventTypes.RejectedPayment"/>.</summary>
 public sealed class RejectedPaymentEventData
 {
-    /// <summary>Arbitrary merchant-supplied data; Monnify's own docs sample for this field is malformed, so this is read as a raw element rather than assuming object or string.</summary>
+    /// <summary>Arbitrary merchant-supplied data; our own docs sample for this field is malformed, so this is read as a raw element rather than assuming object or string.</summary>
     [JsonPropertyName("metaData")]
     public JsonElement? MetaData { get; set; }
 

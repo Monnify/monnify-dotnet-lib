@@ -10,11 +10,19 @@ public sealed class BillerProduct
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
-    [JsonPropertyName("categories")]
-    public IReadOnlyList<BillerCategory> Categories { get; set; } = Array.Empty<BillerCategory>();
+    /// <summary>
+    /// Singular in the real sandbox response, despite our docs currently showing this as a
+    /// <c>categories</c> array - confirmed by direct sandbox calls before shipping this field.
+    /// </summary>
+    [JsonPropertyName("category")]
+    public BillerCategory? Category { get; set; }
 
-    [JsonPropertyName("billers")]
-    public IReadOnlyList<BillerSummary> Billers { get; set; } = Array.Empty<BillerSummary>();
+    /// <summary>
+    /// Singular in the real sandbox response, despite our docs currently showing this as a
+    /// <c>billers</c> array - confirmed by direct sandbox calls before shipping this field.
+    /// </summary>
+    [JsonPropertyName("biller")]
+    public BillerSummary? Biller { get; set; }
 
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     [JsonPropertyName("minAmount")]

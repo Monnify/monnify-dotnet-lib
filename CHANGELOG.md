@@ -100,17 +100,17 @@ own version is independent of Monnify's API versioning.
   returns a result exposing `IsValid`, `RawBody`, and `GetEnvelope()`.
 - `IMonnifyBillsClient` (Bills payment - airtime, data, cable TV, electricity,
   etc.): `GetBillerCategoriesAsync`, `GetBillersAsync`, `GetBillerProductsAsync`,
-  `ValidateCustomerAsync`, `VendAsync`, `RequeryAsync`. Built directly from
-  Monnify's documented request/response samples, since Bills payment is not
-  active by default for any merchant account (email
-  integration-support@monnify.com to activate it) and so could not be
-  sandbox-verified — see `docs/COMPATIBILITY.md` for which specific details
-  are inferred rather than confirmed. Registered with automatic retry
-  disabled, same reasoning as Disbursements: `VendAsync` moves money, so an
-  ambiguous failure must be resolved via `RequeryAsync` with the same
-  reference, not retried blindly. The three list endpoints default to
-  1-based paging (`page=1`), unlike every other paginated list in this SDK -
-  that's Monnify's own documented default for this category specifically.
-  `MonnifyPagedResult<T>` gained two new nullable fields (`IsEmpty`,
-  `NextPage`) to capture the slightly different pagination shape Bills uses
-  compared to Disbursements/Collections.
+  `ValidateCustomerAsync`, `VendAsync`, `RequeryAsync`. Sandbox-verified, which
+  caught three real discrepancies with Monnify's own published docs:
+  pagination is 0-based (`page` defaults to `0`), not the 1-based default the
+  docs describe; `GetBillerProductsAsync` returns singular `category`/`biller`
+  objects on each product, not the `categories`/`billers` arrays the docs
+  show; and `ValidateCustomerAsync`'s `validationReference` (needed by
+  `VendAsync` for certain products, e.g. electricity) lives nested inside
+  `vendInstruction`, not at the top level — the docs' only sample happened to
+  be the case that doesn't need a reference at all, so it never revealed
+  where one would go. Registered with automatic retry disabled, same
+  reasoning as Disbursements: `VendAsync` moves money, so an ambiguous
+  failure must be resolved via `RequeryAsync` with the same reference, not
+  retried blindly. `MonnifyPagedResult<T>` gained two new nullable fields
+  (`IsEmpty`, `NextPage`) to capture the pagination shape Bills uses.

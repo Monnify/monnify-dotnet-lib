@@ -55,7 +55,7 @@ public class MonnifyDisbursementsClientSingleTransferTests
     public async Task AuthorizeSingleTransferAsync_SendsPostWithReferenceAndCode_AndDeserializesSenderInfo()
     {
         var handler = new FakeHttpMessageHandler();
-        // Sample payload from Monnify's official API reference.
+        // Sample payload from our official API reference.
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
             { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
               "responseBody": {

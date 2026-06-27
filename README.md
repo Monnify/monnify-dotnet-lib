@@ -25,7 +25,7 @@ code:
 - [x] Phase 3 — collections client
 - [x] Phase 4 — disbursements client
 - [x] Phase 5 — webhooks
-- [x] Phase 6 — bills payment (unverified against sandbox — see docs/COMPATIBILITY.md)
+- [x] Phase 6 — bills payment
 - [ ] Phase 7 — samples + quickstarts (this README gets filled in here)
 - [ ] Phase 8 — CI/CD + first NuGet release
 

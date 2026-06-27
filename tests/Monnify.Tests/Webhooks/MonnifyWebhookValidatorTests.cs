@@ -4,10 +4,10 @@ namespace Monnify.Tests.Webhooks;
 
 public class MonnifyWebhookValidatorTests
 {
-    // From Monnify's own webhooks documentation sample (secret key, body, and "Hashed Value").
-    // Note: Monnify's docs pretty-print the sample body with JSON.stringify(obj, null, 2) before
-    // hashing it, but that pretty-printed form does NOT reproduce their own published hash -
-    // only the compact form below does. Confirmed by running their exact sample code in Node.js.
+    // From our own webhooks documentation sample (secret key, body, and "Hashed Value").
+    // Note: our docs pretty-print the sample body with JSON.stringify(obj, null, 2) before
+    // hashing it, but that pretty-printed form does NOT reproduce our own published hash -
+    // only the compact form below does. Confirmed by running our exact sample code in Node.js.
     private const string SecretKey = "91MUDL9N6U3BQRXBQ2PJ9M0PW4J22M1Y";
 
     private const string Body = """
@@ -56,7 +56,7 @@ public class MonnifyWebhookValidatorTests
     {
         // Guards against re-serializing/re-formatting the body before validating - even though
         // it's semantically the same JSON, a different byte representation produces a different
-        // signature. This is exactly the mistake in Monnify's own docs sample.
+        // signature. This is exactly the mistake in our own docs sample.
         var prettyPrinted = """
             {
               "eventData": {

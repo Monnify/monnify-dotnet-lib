@@ -7,14 +7,14 @@ internal sealed class MonnifyBillsClient : MonnifyHttpClientBase, IMonnifyBillsC
     public MonnifyBillsClient(HttpClient httpClient) : base(httpClient) { }
 
     public Task<MonnifyPagedResult<BillerCategory>> GetBillerCategoriesAsync(
-        int page = 1, int size = 10, CancellationToken cancellationToken = default)
+        int page = 0, int size = 20, CancellationToken cancellationToken = default)
     {
         var path = $"{MonnifyApiPaths.Bills.BillerCategories}?page={page}&size={size}";
         return SendAsync<MonnifyPagedResult<BillerCategory>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
     public Task<MonnifyPagedResult<Biller>> GetBillersAsync(
-        string? categoryCode = null, int page = 1, int size = 20, CancellationToken cancellationToken = default)
+        string? categoryCode = null, int page = 0, int size = 20, CancellationToken cancellationToken = default)
     {
         var query = new List<string> { $"page={page}", $"size={size}" };
         if (!string.IsNullOrWhiteSpace(categoryCode))
@@ -27,7 +27,7 @@ internal sealed class MonnifyBillsClient : MonnifyHttpClientBase, IMonnifyBillsC
     }
 
     public Task<MonnifyPagedResult<BillerProduct>> GetBillerProductsAsync(
-        string billerCode, int page = 1, int size = 20, CancellationToken cancellationToken = default)
+        string billerCode, int page = 0, int size = 20, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(billerCode))
         {

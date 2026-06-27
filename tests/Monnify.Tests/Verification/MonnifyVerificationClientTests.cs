@@ -59,7 +59,7 @@ public class MonnifyVerificationClientTests
     public async Task MatchBvnDetailsAsync_SendsPostWithJsonBody_AndDeserializesMixedShapeResponse()
     {
         var handler = new FakeHttpMessageHandler();
-        // Sample payload from Monnify's official API reference (POST /api/v1/vas/bvn-details-match).
+        // Sample payload from our official API reference (POST /api/v1/vas/bvn-details-match).
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
             { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
               "responseBody": {
@@ -99,7 +99,7 @@ public class MonnifyVerificationClientTests
     public async Task MatchBvnToAccountAsync_SendsPostWithJsonBody_AndDeserializesResult()
     {
         var handler = new FakeHttpMessageHandler();
-        // Sample payload from Monnify's official API reference (POST /api/v1/vas/bvn-account-match).
+        // Sample payload from our official API reference (POST /api/v1/vas/bvn-account-match).
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
             { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
               "responseBody": {
@@ -136,7 +136,7 @@ public class MonnifyVerificationClientTests
     public async Task VerifyNinAsync_SendsPostWithJsonBody_AndDeserializesResult()
     {
         var handler = new FakeHttpMessageHandler();
-        // Sample payload from Monnify's official API reference (POST /api/v1/vas/nin-details).
+        // Sample payload from our official API reference (POST /api/v1/vas/nin-details).
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
             { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
               "responseBody": {
