@@ -3,47 +3,38 @@
 [![CI](https://github.com/monnify-dotnet/monnify-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/monnify-dotnet/monnify-dotnet/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/Monnify.svg)](https://www.nuget.org/packages/Monnify)
 
-An idiomatic, community-maintained .NET SDK for the
-[Monnify](https://developers.monnify.com) payment gateway API — collections,
-disbursements, bills payment, verification, banks, and webhook signature
-validation — targeting `netstandard2.0` and `net8.0`. This is not an official
-Monnify project.
+An idiomatic .NET SDK for the [Monnify](https://developers.monnify.com)
+payment gateway API, targeting `netstandard2.0` and `net8.0`.
 
-> **Status: pre-release / under active development.** See
-> [implementation phasing](#status) below and
-> [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for which endpoints are
-> implemented.
+> **Status: pre-release.** Not yet published to NuGet.org. See
+> [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for every endpoint this SDK
+> calls and how it was verified.
 
-## Status
+## Features
 
-This SDK is being built incrementally. Each milestone ships working, tested
-code:
+- **Collections** — hosted checkout, reserved (virtual) accounts, invoices,
+  bank-transfer payment links, transaction search
+- **Disbursements** — single and bulk transfers, OTP authorization, wallet
+  balance, transaction search
+- **Bills payment** — airtime, data, cable TV, electricity, and other billers
+- **Verification** — account name enquiry, BVN/NIN checks
+- **Banks** — bank list, USSD-enabled banks
+- **Webhooks** — signature verification, typed event parsing for all 12
+  documented event types
+- One `AddMonnify(...)` call registers every typed client via
+  `Microsoft.Extensions.DependencyInjection`
+- Nullable reference types and `CancellationToken` on every async method
 
-- [x] Phase 0 — repo scaffolding
-- [x] Phase 1 — core HTTP + authentication infrastructure
-- [x] Phase 2 — verification + banks clients
-- [x] Phase 3 — collections client
-- [x] Phase 4 — disbursements client
-- [x] Phase 5 — webhooks
-- [x] Phase 6 — bills payment
-- [x] Phase 7 — samples + quickstarts
-- [x] Phase 8a — CI/CD (build/test/format/pack-validation on every PR, CodeQL, Dependabot)
-- [ ] Phase 8b — first NuGet release (infrastructure is in place; publishing is
-      gated behind a manual approval and hasn't happened yet — see
-      [Releasing](#releasing) below)
+## Install
 
-## Quickstart
-
-### Install
-
-Not yet published to NuGet.org (see [Status](#status)). Until then, reference
-the project directly or build the `.nupkg` locally:
+Not yet published to NuGet.org (see Status above). Until then, reference the
+project directly or build the `.nupkg` locally:
 
 ```bash
 dotnet pack src/Monnify/Monnify.csproj -c Release
 ```
 
-### Register services
+## Configure
 
 ```csharp
 using Monnify;
@@ -56,10 +47,12 @@ builder.Services.AddMonnify(options =>
 });
 ```
 
-This registers every typed client (`IMonnifyCollectionsClient`,
-`IMonnifyDisbursementsClient`, `IMonnifyBillsClient`, `IMonnifyVerificationClient`,
-`IMonnifyBanksClient`) plus the `MonnifyClient` facade. Inject whichever one you
+This registers `IMonnifyCollectionsClient`, `IMonnifyDisbursementsClient`,
+`IMonnifyBillsClient`, `IMonnifyVerificationClient`, `IMonnifyBanksClient`, and
+the `MonnifyClient` facade that aggregates all of them — inject whichever you
 need.
+
+## Usage
 
 ### Collect a payment
 
@@ -75,6 +68,54 @@ var checkout = await collections.InitializeTransactionAsync(new InitializeTransa
 });
 
 // Redirect the customer to checkout.CheckoutUrl
+```
+
+### Send money
+
+```csharp
+var transfer = await disbursements.InitiateSingleTransferAsync(new SingleTransferRequest
+{
+    Amount = 5000,
+    Reference = Guid.NewGuid().ToString("N"),
+    Narration = "Refund for order #1234",
+    DestinationBankCode = "058",
+    DestinationAccountNumber = "0123456789",
+    DestinationAccountName = "Jane Doe",
+    SourceAccountNumber = "<your Monnify wallet account number>",
+});
+```
+
+A failed or ambiguous transfer should never be blindly retried with the same
+reference — see the remarks on `IMonnifyDisbursementsClient` for the safe
+retry pattern (query status first; only retry with a *new* reference).
+
+### Pay a bill
+
+```csharp
+var vend = await bills.VendAsync(new VendBillRequest
+{
+    ProductCode = "11", // e.g. an airtime top-up product
+    CustomerId = "08012345678",
+    Amount = 500,
+    Reference = Guid.NewGuid().ToString("N"),
+});
+```
+
+Some products require a `ValidationReference` obtained from
+`ValidateCustomerAsync` first — check `VendInstruction.RequireValidationRef`
+on that result.
+
+### Verify an account
+
+```csharp
+var account = await verification.ValidateAccountNumberAsync("0123456789", "044");
+// account.AccountName
+```
+
+### List banks
+
+```csharp
+var allBanks = await banks.GetBanksAsync();
 ```
 
 ### Receive webhooks
@@ -100,9 +141,27 @@ app.MapPost("/webhooks/monnify", async (HttpRequest request, ILogger<Program> lo
 ```
 
 Note: our sandbox sends no `monnify-signature` header at all, so `IsValid` is
-always `false` there by design - see the remarks on `MonnifyWebhookValidator`.
+always `false` there by design — see the remarks on `MonnifyWebhookValidator`.
 
-### Full runnable samples
+## Error handling
+
+Every client throws `MonnifyApiException` (carrying `ResponseCode`,
+`ResponseMessage`, `HttpStatusCode`, and `RawResponseBody`) when Monnify
+reports a failure, rather than returning a null or empty result — payments
+are a domain where a silently swallowed failure is dangerous.
+
+```csharp
+try
+{
+    await collections.InitializeTransactionAsync(request);
+}
+catch (MonnifyApiException ex)
+{
+    logger.LogError("Monnify rejected the request: {Code} - {Message}", ex.ResponseCode, ex.ResponseMessage);
+}
+```
+
+## Full runnable samples
 
 - [samples/Monnify.Samples.ConsoleApp](samples/Monnify.Samples.ConsoleApp) — DI
   via the generic host outside ASP.NET Core, listing banks and initializing a
@@ -113,24 +172,16 @@ always `false` there by design - see the remarks on `MonnifyWebhookValidator`.
 Both read credentials from environment variables; see the comment at the top
 of each `Program.cs` for which ones to set.
 
-## Releasing
+## Documentation
 
-Versioning is computed by Nerdbank.GitVersioning from `version.json` and git
-history - every commit gets a meaningful prerelease version
-(`0.1.18-alpha.gb301a5cb61`-style) with no manual bumping.
-
-Pushing a `vX.Y.Z` tag triggers [release.yml](.github/workflows/release.yml),
-which builds, tests, and packs, then **requires manual approval** before
-publishing: the publish job runs under a `nuget-release` GitHub Environment,
-which needs required reviewers configured (Settings → Environments) and a
-`NUGET_API_KEY` secret scoped to that environment specifically, not a
-repo-wide secret. Until that environment is set up, the publish job has no
-reviewers and nothing will publish — that's the intended state until this is
-deliberately configured and approved.
+- [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) — every SDK method against
+  the Monnify endpoint it calls, and how it was verified
+- [CHANGELOG.md](CHANGELOG.md)
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: see [SECURITY.md](SECURITY.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) (also covers versioning and the
+release process). Security issues: see [SECURITY.md](SECURITY.md).
 
 ## License
 
