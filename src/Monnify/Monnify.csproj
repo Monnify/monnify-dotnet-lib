@@ -2,10 +2,15 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-    <Description>Idiomatic .NET SDK for the Monnify payment gateway API: collections, disbursements, verification, banks, and webhook signature validation.</Description>
-    <PackageTags>monnify;payments;sdk;nigeria;fintech;disbursement;collections;webhooks</PackageTags>
+    <Description>Idiomatic .NET SDK for the Monnify payment gateway API: collections, disbursements, bills payment, verification, banks, and webhook signature validation.</Description>
+    <PackageTags>monnify;payments;sdk;nigeria;fintech;disbursement;collections;bills;webhooks</PackageTags>
     <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" />

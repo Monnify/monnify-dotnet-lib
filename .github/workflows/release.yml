@@ -1,0 +1,78 @@
+name: Release
+
+# Only fires on a vX.Y.Z tag push - matches version.json's publicReleaseRefSpec, so
+# Nerdbank.GitVersioning treats that tag as the actual release version rather than a
+# git-height-suffixed prerelease. Pushing this tag is the only thing that starts this workflow;
+# nothing in CI (ci.yml) can trigger it.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-test-pack:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      # Same safety gate as CI: a release tag does not skip the test suite.
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/Monnify/Monnify.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: Read package version
+        id: version
+        run: echo "value=$(ls ./artifacts/*.nupkg | head -n1 | sed -E 's/.*Monnify\.([0-9].*)\.nupkg/\1/')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: ./artifacts/*.nupkg
+
+  # Requires manual approval before this job runs: configure a GitHub Environment named
+  # "nuget-release" (Settings > Environments) with required reviewers, and add NUGET_API_KEY as a
+  # secret scoped to that environment (not a repo-wide secret) so the key is only ever readable
+  # after someone approves. Until that environment is configured, this job has no reviewers
+  # assigned and nothing will publish - that's the intended state until this is explicitly set up.
+  publish:
+    needs: build-test-pack
+    runs-on: ubuntu-latest
+    environment: nuget-release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nupkg
+          path: ./artifacts
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Push to NuGet.org
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ needs.build-test-pack.outputs.version }}
+          files: ./artifacts/*.nupkg
+          generate_release_notes: true

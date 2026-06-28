@@ -27,7 +27,10 @@ code:
 - [x] Phase 5 — webhooks
 - [x] Phase 6 — bills payment
 - [x] Phase 7 — samples + quickstarts
-- [ ] Phase 8 — CI/CD + first NuGet release
+- [x] Phase 8a — CI/CD (build/test/format/pack-validation on every PR, CodeQL, Dependabot)
+- [ ] Phase 8b — first NuGet release (infrastructure is in place; publishing is
+      gated behind a manual approval and hasn't happened yet — see
+      [Releasing](#releasing) below)
 
 ## Quickstart
 
@@ -109,6 +112,21 @@ always `false` there by design - see the remarks on `MonnifyWebhookValidator`.
 
 Both read credentials from environment variables; see the comment at the top
 of each `Program.cs` for which ones to set.
+
+## Releasing
+
+Versioning is computed by Nerdbank.GitVersioning from `version.json` and git
+history - every commit gets a meaningful prerelease version
+(`0.1.18-alpha.gb301a5cb61`-style) with no manual bumping.
+
+Pushing a `vX.Y.Z` tag triggers [release.yml](.github/workflows/release.yml),
+which builds, tests, and packs, then **requires manual approval** before
+publishing: the publish job runs under a `nuget-release` GitHub Environment,
+which needs required reviewers configured (Settings → Environments) and a
+`NUGET_API_KEY` secret scoped to that environment specifically, not a
+repo-wide secret. Until that environment is set up, the publish job has no
+reviewers and nothing will publish — that's the intended state until this is
+deliberately configured and approved.
 
 ## Contributing
 

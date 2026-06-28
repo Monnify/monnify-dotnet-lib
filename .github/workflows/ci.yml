@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history - Nerdbank.GitVersioning needs it to compute the version
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Verify formatting
+        run: dotnet format --verify-no-changes --no-restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      # Runs both Monnify.Tests and Monnify.IntegrationTests. The integration tests use
+      # [SkippableFact] + Skip.IfNot(SandboxCredentials.IsAvailable, ...) (see
+      # tests/Monnify.IntegrationTests/SandboxCredentials.cs) so they report as skipped here,
+      # not failed - this runner has no MONNIFY_SANDBOX_API_KEY/SECRET_KEY configured on purpose.
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+
+      # Validates the package actually builds correctly across both target frameworks - this is
+      # NOT a publish step, nothing here touches NuGet.org. No artifact is uploaded either, since
+      # this is only a packaging sanity check, not a release.
+      - name: Pack (validation only - not published)
+        run: dotnet pack src/Monnify/Monnify.csproj --configuration Release --no-build --output ./artifacts

@@ -124,3 +124,31 @@ own version is independent of Monnify's API versioning.
   correctly-dispatched webhook) against a running instance.
 - README quickstart section covering installation, service registration,
   initiating a checkout, and receiving webhooks, linking to both samples.
+- CI/CD: `ci.yml` (restore, `dotnet format --verify-no-changes`, build, test,
+  pack-validation-only on every PR and push to `main`), `codeql.yml` (weekly +
+  on push/PR), and `dependabot.yml` (weekly NuGet and GitHub Actions update
+  checks). `release.yml` triggers on a `vX.Y.Z` tag, builds/tests/packs, then
+  requires manual approval via a `nuget-release` GitHub Environment before
+  publishing to NuGet.org and creating a GitHub Release - nothing publishes
+  automatically. Versioning is computed by the already-present
+  Nerdbank.GitVersioning setup from `version.json`, confirmed locally to
+  produce a sensible prerelease version per commit.
+- Relaxed `dotnet_style_require_accessibility_modifiers` from `always` to
+  `for_non_interface_members` in `.editorconfig` - every interface in this
+  codebase has consistently omitted the (redundant, since interface members
+  are implicitly public) `public` modifier, so the rule was rewritten to
+  match that actual, consistent convention rather than mechanically adding
+  the modifier across every interface file.
+- `Monnify.csproj` now packs the root `README.md` into the NuGet package
+  (`PackageReadmeFile`), fixing a "missing a readme" warning from `dotnet pack`.
+- Added `.github/ISSUE_TEMPLATE/` (bug report, feature request, and a
+  `config.yml` redirecting security reports to private vulnerability
+  reporting) and `.github/PULL_REQUEST_TEMPLATE.md` matching the checklist
+  already documented in `CONTRIBUTING.md`.
+
+### Fixed
+- `SECURITY.md` still described the webhook signature scheme as plain
+  `SHA-512(secretKey + rawBody)` from before that was corrected to
+  `HMAC-SHA512` earlier in this project - updated to match what
+  `MonnifyWebhookValidator` actually implements, plus a note that sandbox
+  sends no signature header at all.

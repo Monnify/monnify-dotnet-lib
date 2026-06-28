@@ -22,12 +22,15 @@ directly to Monnify, not here.
 ## Webhook Signature Verification
 
 `MonnifyWebhookValidator` performs a constant-time comparison of the computed
-`SHA-512(secretKey + rawBody)` signature against the `monnify-signature`
-header to avoid timing attacks. Always validate the signature before trusting
-or acting on a webhook payload. Monnify's documented sender IP
-(`35.242.133.146`) can change over time — do not rely on IP allowlisting as
-your only control; treat it as defense-in-depth at most, layered on top of
-signature verification, not a replacement for it.
+`HMAC-SHA512(key: secretKey, message: rawRequestBody)` signature against the
+`monnify-signature` header to avoid timing attacks. Always validate the
+signature before trusting or acting on a webhook payload. Note: our sandbox
+sends no `monnify-signature` header at all - see the remarks on
+`MonnifyWebhookValidator` and `docs/COMPATIBILITY.md` if you're testing
+webhooks there. Our documented sender IP (`35.242.133.146`) can change over
+time — do not rely on IP allowlisting as your only control; treat it as
+defense-in-depth at most, layered on top of signature verification, not a
+replacement for it.
 
 ## Supported Versions
 
