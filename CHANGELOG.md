@@ -114,3 +114,13 @@ own version is independent of Monnify's API versioning.
   failure must be resolved via `RequeryAsync` with the same reference, not
   retried blindly. `MonnifyPagedResult<T>` gained two new nullable fields
   (`IsEmpty`, `NextPage`) to capture the pagination shape Bills uses.
+- `samples/Monnify.Samples.ConsoleApp`: DI registration via the generic host
+  outside ASP.NET Core, listing banks and initializing a checkout. Verified
+  end-to-end against the real sandbox.
+- `samples/Monnify.Samples.WebApi`: a minimal API webhook receiver
+  demonstrating signature verification, envelope parsing, and dispatch by
+  event type, responding immediately per our own best-practice guidance.
+  Verified end-to-end (signature rejection and a correctly-signed,
+  correctly-dispatched webhook) against a running instance.
+- README quickstart section covering installation, service registration,
+  initiating a checkout, and receiving webhooks, linking to both samples.
