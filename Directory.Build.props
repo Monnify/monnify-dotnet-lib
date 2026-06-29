@@ -10,12 +10,12 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <IsPackable>false</IsPackable>
-    <Authors>Monnify .NET Contributors</Authors>
-    <Company>Monnify .NET Contributors</Company>
+    <Authors>Monnify Payment Gateway</Authors>
+    <Company>Monnify Payment Gateway</Company>
     <Product>Monnify .NET SDK</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/monnify-dotnet/monnify-dotnet</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/monnify-dotnet/monnify-dotnet</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Monnify/monnify-dotnet-lib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Monnify/monnify-dotnet-lib</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
