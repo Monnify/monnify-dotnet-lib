@@ -7,8 +7,9 @@ alongside the mocked unit tests in `Monnify.Tests` (see
 
 They're tagged `[Trait("Category", "Sandbox")]` and use `[SkippableFact]`
 (`Xunit.SkippableFact`) so they **skip silently rather than fail** when
-credentials aren't available — CI never has sandbox credentials and excludes
-this category entirely via `--filter "Category!=Sandbox"`.
+credentials aren't available — CI runs `dotnet test` with no filter, but
+since it never has sandbox credentials configured, `SandboxCredentials.IsAvailable`
+is `false` and every test in this project reports as `Skipped`, not `Failed`.
 
 ## Running locally
 

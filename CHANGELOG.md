@@ -11,6 +11,8 @@ own version is independent of Monnify's API versioning.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-29
+
 ### Fixed
 - Error responses that don't match Monnify's standard envelope (a gateway-level rejection, an
   HTTP error page, or any 401/403 returned because a feature like Disbursements isn't activated
@@ -18,6 +20,11 @@ own version is independent of Monnify's API versioning.
   `responseCode`/`responseMessage`. The envelope's string fields were defaulting to `""` rather
   than `null`, which silently defeated the fallback logic in both `MonnifyHttpClientBase` and
   `MonnifyTokenProvider`.
+- `SECURITY.md` still described the webhook signature scheme as plain
+  `SHA-512(secretKey + rawBody)` from before that was corrected to
+  `HMAC-SHA512` earlier in this project - updated to match what
+  `MonnifyWebhookValidator` actually implements, plus a note that sandbox
+  sends no signature header at all.
 
 ### Added
 - Initial repository scaffolding: solution layout, Central Package Management,
@@ -145,10 +152,3 @@ own version is independent of Monnify's API versioning.
   `config.yml` redirecting security reports to private vulnerability
   reporting) and `.github/PULL_REQUEST_TEMPLATE.md` matching the checklist
   already documented in `CONTRIBUTING.md`.
-
-### Fixed
-- `SECURITY.md` still described the webhook signature scheme as plain
-  `SHA-512(secretKey + rawBody)` from before that was corrected to
-  `HMAC-SHA512` earlier in this project - updated to match what
-  `MonnifyWebhookValidator` actually implements, plus a note that sandbox
-  sends no signature header at all.

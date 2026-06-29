@@ -6,7 +6,8 @@
 An idiomatic .NET SDK for the [Monnify](https://developers.monnify.com)
 payment gateway API, targeting `netstandard2.0` and `net8.0`.
 
-> **Status: pre-release.** Not yet published to NuGet.org. See
+> **Status: early release (pre-1.0).** Published on NuGet.org starting with
+> `0.1.0` — the public API may still change before a stable `1.0`. See
 > [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for every endpoint this SDK
 > calls and how it was verified.
 
@@ -27,11 +28,8 @@ payment gateway API, targeting `netstandard2.0` and `net8.0`.
 
 ## Install
 
-Not yet published to NuGet.org (see Status above). Until then, reference the
-project directly or build the `.nupkg` locally:
-
 ```bash
-dotnet pack src/Monnify/Monnify.csproj -c Release
+dotnet add package Monnify
 ```
 
 ## Configure

@@ -2,9 +2,8 @@
 
 ## Reporting a Vulnerability
 
-This is a community-maintained, unofficial SDK for the Monnify payment gateway
-API. If you discover a security vulnerability in this SDK (not in Monnify's
-own platform), please report it privately via GitHub's
+If you discover a security vulnerability in this SDK (not in Monnify's own
+platform), please report it privately via GitHub's
 [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)
 feature on this repository rather than opening a public issue.
 
