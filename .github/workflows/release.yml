@@ -43,7 +43,7 @@ jobs:
         id: version
         run: echo "value=$(ls ./artifacts/*.nupkg | head -n1 | sed -E 's/.*Monnify\.([0-9].*)\.nupkg/\1/')" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: nupkg
           path: ./artifacts/*.nupkg
