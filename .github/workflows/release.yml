@@ -18,11 +18,11 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.value }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
 
@@ -43,7 +43,7 @@ jobs:
         id: version
         run: echo "value=$(ls ./artifacts/*.nupkg | head -n1 | sed -E 's/.*Monnify\.([0-9].*)\.nupkg/\1/')" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: nupkg
           path: ./artifacts/*.nupkg
@@ -61,12 +61,12 @@ jobs:
     permissions:
       id-token: write # required to request the GitHub OIDC token for NuGet Trusted Publishing
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: nupkg
           path: ./artifacts
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
 
