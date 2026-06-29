@@ -43,8 +43,18 @@ Pushing a `vX.Y.Z` tag triggers [release.yml](.github/workflows/release.yml),
 which builds, tests, and packs, then **requires manual approval** before
 publishing: the publish job runs under a `nuget-release` GitHub Environment.
 Before the first release, that environment needs to be created (Settings →
-Environments) with required reviewers, plus a `NUGET_API_KEY` secret scoped
-to that environment specifically — not a repo-wide secret, so the key is only
-ever readable after someone approves. Until that's configured, the publish
-job has no reviewers and nothing will publish, which is the intended state
-until this is deliberately set up.
+Environments) with required reviewers.
+
+Publishing itself uses [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
+(OIDC) rather than a stored API key — the workflow exchanges a short-lived
+GitHub token for a temporary (~1hr) NuGet API key at publish time, so there's
+no long-lived secret to leak or rotate. This requires a matching policy on
+nuget.org (your account → Trusted Publishing) with Repository Owner=`Monnify`,
+Repository=`monnify-dotnet-lib`, Workflow File=`release.yml`,
+Environment=`nuget-release` — the environment restriction means a token is
+only trusted if it came from a run that passed through that approval gate.
+The only secret still needed is `NUGET_USER` (the nuget.org profile username,
+not the account email), scoped to the `nuget-release` environment. Until the
+environment and the nuget.org policy both exist, the publish job has no
+reviewers and nothing will publish, which is the intended state until this is
+deliberately set up.
