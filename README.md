@@ -52,6 +52,11 @@ need.
 
 ## Usage
 
+The examples below assume `collections`, `disbursements`, `bills`,
+`verification`, and `banks` are constructor-injected via the interfaces
+registered above (e.g. a constructor parameter of type
+`IMonnifyCollectionsClient collections`).
+
 ### Collect a payment
 
 ```csharp
@@ -89,19 +94,32 @@ retry pattern (query status first; only retry with a *new* reference).
 
 ### Pay a bill
 
+Some products (electricity prepaid plans, for example) require validating the
+customer first, which returns a `ValidationReference` to pass into the vend
+request — check `VendInstruction.RequireValidationRef` to know if a given
+product needs this step:
+
 ```csharp
+var validation = await bills.ValidateCustomerAsync(new ValidateBillCustomerRequest
+{
+    ProductCode = "product-ikedc-pre",
+    CustomerId = "55555666666",
+});
+
+var requiresValidation = validation.VendInstruction?.RequireValidationRef == true;
+
 var vend = await bills.VendAsync(new VendBillRequest
 {
-    ProductCode = "11", // e.g. an airtime top-up product
-    CustomerId = "08012345678",
+    ProductCode = "product-ikedc-pre",
+    CustomerId = "55555666666",
     Amount = 500,
     Reference = Guid.NewGuid().ToString("N"),
+    ValidationReference = requiresValidation ? validation.VendInstruction!.ValidationReference : null,
 });
 ```
 
-Some products require a `ValidationReference` obtained from
-`ValidateCustomerAsync` first — check `VendInstruction.RequireValidationRef`
-on that result.
+Products that don't need validation (airtime top-ups, for example) can skip
+straight to `VendAsync` and leave `ValidationReference` unset.
 
 ### Verify an account
 
