@@ -60,6 +60,7 @@ jobs:
     environment: nuget-release
     permissions:
       id-token: write # required to request the GitHub OIDC token for NuGet Trusted Publishing
+      contents: write # required by softprops/action-gh-release to create the GitHub Release
     steps:
       - uses: actions/download-artifact@v8
         with:
