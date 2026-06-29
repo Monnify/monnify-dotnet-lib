@@ -25,6 +25,15 @@
 - Public members need XML doc comments (enforced via `GenerateDocumentationFile`).
 - Run `dotnet format` before submitting a PR; CI verifies formatting.
 
+## Commit messages / PR titles
+
+This repo follows [Conventional Commits](https://www.conventionalcommits.org/)
+(`feat: ...`, `fix: ...`, `chore: ...`, etc., with a `BREAKING CHANGE:` footer
+when needed). This isn't just a style preference — `release-please` (see
+below) parses these to decide the next version number and to write the
+changelog automatically, so it needs to be the PR title if you squash-merge,
+or every commit message if you merge/rebase.
+
 ## Pull request checklist
 
 - [ ] Tests added/updated and passing (`dotnet test`)
@@ -34,15 +43,39 @@
 
 ## Versioning and releasing
 
-Versioning is computed by Nerdbank.GitVersioning from `version.json` and git
-history — every commit gets a meaningful prerelease version
-(`0.1.18-alpha.gb301a5cb61`-style) automatically; there's no manual version
-bump.
+The version number and the release tag are both decided automatically by
+[release-please](.github/workflows/release-please.yml), not by hand:
 
-Pushing a `vX.Y.Z` tag triggers [release.yml](.github/workflows/release.yml),
-which builds, tests, and packs, then **requires manual approval** before
-publishing: the publish job runs under a `nuget-release` GitHub Environment
-(already configured with required reviewers).
+1. Every PR merged to `main` is analyzed by `release-please` for Conventional
+   Commits since the last release. It maintains a single standing **Release
+   PR** that accumulates these, with the computed next version
+   (`fix:` → patch, `feat:` → minor, `BREAKING CHANGE:` → major) and an
+   auto-written `CHANGELOG.md` section.
+2. Merging that Release PR creates and pushes a `vX.Y.Z` tag.
+3. That tag push is what triggers [release.yml](.github/workflows/release.yml),
+   which builds, tests, and packs, then **requires manual approval** before
+   publishing: the publish job runs under a `nuget-release` GitHub Environment
+   (already configured with required reviewers).
+
+Don't create or push a `vX.Y.Z` tag by hand — that races with
+`release-please`'s own bookkeeping in `.release-please-manifest.json` and can
+leave it confused about what's already shipped.
+
+`release-please` pushes its tag using a fine-grained PAT in the
+`RELEASE_PLEASE_TOKEN` repo secret, not the default `GITHUB_TOKEN` - GitHub
+blocks the default token's pushes from triggering other workflows (its
+built-in loop-prevention), which would otherwise silently break the chain
+right before it reaches `release.yml`. `skip-github-release: true` in
+`release-please-config.json` stops `release-please` from also creating a
+GitHub Release itself - `release.yml`'s own publish job already creates one
+after a successful NuGet push, and having both would create two Releases for
+the same tag.
+
+Nerdbank.GitVersioning still computes the actual assembly/package version
+from `version.json` and git history at build time, the same as before -
+`release-please` only decides *which* tag to create; once that tag exists and
+matches `version.json`'s `publicReleaseRefSpec`, NBGV treats it as the public
+release version directly.
 
 Publishing itself uses [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
 (OIDC) rather than a stored API key — the workflow exchanges a short-lived
