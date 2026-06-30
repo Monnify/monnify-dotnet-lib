@@ -57,6 +57,18 @@ internal static class MonnifyApiPaths
             public const string AuthorizeOtp = "/api/v1/merchant/cards/otp/authorize";
             public const string Authorize3ds = "/api/v1/sdk/cards/secure-3d/authorize";
         }
+
+        internal static class Mandates
+        {
+            public const string Create = "/api/v1/direct-debit/mandate/create";
+            public const string Base = "/api/v1/direct-debit/mandate/";
+            public const string Debit = "/api/v1/direct-debit/mandate/debit";
+            public const string DebitStatus = "/api/v1/direct-debit/mandate/debit-status";
+            public const string Cancel = "/api/v1/direct-debit/mandate/cancel-mandate";
+
+            /// <summary>Plural - a different base path than every other mandate endpoint above.</summary>
+            public const string List = "/api/v1/direct-debit/mandates";
+        }
     }
 
     internal static class Disbursements

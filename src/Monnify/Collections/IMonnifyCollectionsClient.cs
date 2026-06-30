@@ -4,14 +4,15 @@ namespace Monnify.Collections;
 
 /// <remarks>
 /// Registered with automatic HTTP retry disabled: <see cref="ChargeAsync"/> directly attempts to
-/// debit a card, so an ambiguous failure (timeout, network error, 5xx) must not be blindly resent
-/// with the same details - that risks a double charge, same reasoning as
+/// debit a card and <see cref="DebitMandateAsync"/> directly debits a mandate, so an ambiguous
+/// failure (timeout, network error, 5xx) on either must not be blindly resent with the same
+/// details - that risks a double charge, same reasoning as
 /// <see cref="Disbursements.IMonnifyDisbursementsClient"/> and <see cref="Bills.IMonnifyBillsClient"/>.
-/// Query <see cref="GetTransactionAsync"/> with the same <c>transactionReference</c> instead. The
-/// other methods on this client don't move money directly (they set up a payment instrument the
-/// customer still has to complete), so this is a more conservative retry stance than they
-/// strictly need, traded for keeping every collection method - including card charges - on one
-/// client.
+/// Query <see cref="GetTransactionAsync"/> or <see cref="GetMandateDebitStatusAsync"/> with the
+/// same reference instead. Most other methods on this client don't move money directly (they set
+/// up a payment instrument the customer still has to complete), so this is a more conservative
+/// retry stance than they strictly need, traded for keeping every collection method - including
+/// card charges and mandate debits - on one client.
 /// </remarks>
 public interface IMonnifyCollectionsClient
 {
@@ -76,4 +77,40 @@ public interface IMonnifyCollectionsClient
     /// <summary>Gets the status of a transaction by either its Monnify transaction reference or the merchant's payment reference.</summary>
     Task<Transaction> QueryTransactionAsync(
         string? transactionReference = null, string? paymentReference = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Initiates a direct debit mandate - a recurring authorization to debit a customer's bank
+    /// account. The mandate isn't active until the customer completes authorization (a token
+    /// transfer) via <see cref="MandateActionResult.RedirectUrl"/> or the
+    /// <see cref="Mandate.AuthorizationLink"/> returned by <see cref="GetMandatesAsync"/>.
+    /// </summary>
+    Task<MandateActionResult> CreateMandateAsync(CreateMandateRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Looks up one or more mandates by reference. Despite the singular use case, the endpoint's
+    /// query parameter and response are both plural - pass a single reference or several
+    /// comma-separated, and always get a list back.
+    /// </summary>
+    Task<IReadOnlyList<Mandate>> GetMandatesAsync(string mandateReferences, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Debits a single payment from an active mandate. See the remarks on
+    /// <see cref="IMonnifyCollectionsClient"/> for the safe retry pattern after an ambiguous
+    /// failure.
+    /// </summary>
+    Task<MandateDebitResult> DebitMandateAsync(DebitMandateRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Checks the status of a previous <see cref="DebitMandateAsync"/> call by its payment reference.</summary>
+    Task<MandateDebitResult> GetMandateDebitStatusAsync(string paymentReference, CancellationToken cancellationToken = default);
+
+    /// <summary>Requests cancellation of a mandate.</summary>
+    Task<MandateActionResult> CancelMandateAsync(string mandateCode, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Lists mandates created or initiated by the merchant. <paramref name="filter"/>'s
+    /// <see cref="ListMandatesFilter.StartDate"/>/<see cref="ListMandatesFilter.EndDate"/> are
+    /// required and the range between them must not exceed 90 days.
+    /// </summary>
+    Task<MandateListResult> ListMandatesAsync(
+        ListMandatesFilter filter, int page = 0, int limit = 20, CancellationToken cancellationToken = default);
 }

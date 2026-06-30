@@ -28,7 +28,12 @@ Status legend:
 | `IMonnifyCollectionsClient.GetTransactionAsync` | `GET /api/v2/transactions/{transactionReference}` | **Implemented** | Amount fields are quoted strings; `decimal` via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyCollectionsClient.QueryTransactionAsync` | `GET /api/v2/merchant/transactions/query?transactionReference=&paymentReference=` | **Implemented** | Same response shape as `GetTransactionAsync`; requires at least one query parameter |
 | *(Collections — sub-accounts/splitting)* | TBD | Planned | |
-| *(Collections — direct debit/mandates)* | TBD | Planned | |
+| `IMonnifyCollectionsClient.CreateMandateAsync` | `POST /api/v1/direct-debit/mandate/create` | **Implemented** | Sandbox returned `mandateStatus: "PENDING"` and no `redirectUrl`, not the `"INITIATED"` + echoed `redirectUrl` our docs sample shows |
+| `IMonnifyCollectionsClient.GetMandatesAsync` | `GET /api/v1/direct-debit/mandate/?mandateReferences=` | **Implemented** | The reference field in the response is `mandateReference`, not `externalMandateReference` as our docs sample shows. Two undocumented fields found: `responseMessage` and `schemeCode`. `mandateStatus` can be `PENDING_AUTHORIZATION`, not in our docs' status list |
+| `IMonnifyCollectionsClient.DebitMandateAsync` | `POST /api/v1/direct-debit/mandate/debit` | **Implemented** | Not sandbox-verified end-to-end - needs an `ACTIVE` mandate. Automatic retry disabled - this directly debits a mandate |
+| `IMonnifyCollectionsClient.GetMandateDebitStatusAsync` | `GET /api/v1/direct-debit/mandate/debit-status?paymentReference=` | **Implemented** | `responseMessage` can be `{}` instead of a string - handled via `LenientStringJsonConverter` |
+| `IMonnifyCollectionsClient.CancelMandateAsync` | `PATCH /api/v1/direct-debit/mandate/cancel-mandate/{mandateCode}` | **Implemented** | Sandbox-verified against a real mandate created in this session |
+| `IMonnifyCollectionsClient.ListMandatesAsync` | `GET /api/v1/direct-debit/mandates?startDate=&endDate=&...` | **Implemented** | Own paging shape; `first`/`numberOfElements`/`empty` are nullable since the sandbox sometimes omits them |
 | *(Collections — card tokenization)* | TBD | Planned | |
 | *(Collections — Payment Links)* | N/A | Out of scope | Dashboard-only feature, no API |
 | `IMonnifyDisbursementsClient.InitiateSingleTransferAsync` | `POST /api/v2/disbursements/single` | **Implemented** | Requires Transfer feature activation (sales@monnify.com); automatic retry disabled |

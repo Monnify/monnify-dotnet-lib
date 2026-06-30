@@ -26,6 +26,13 @@ own version is independent of Monnify's API versioning.
   sandbox-verification notes.
 - Corrected `InitiateBankTransferAsync`'s doc note: the real response field is `ussdPayment`, not
   `ussdCode` as our simplified doc sample shows (the SDK already had this right).
+- `IMonnifyCollectionsClient`: direct debit mandates - `CreateMandateAsync`, `GetMandatesAsync`,
+  `DebitMandateAsync`, `GetMandateDebitStatusAsync`, `CancelMandateAsync`, `ListMandatesAsync`.
+  Sandbox testing surfaced several real discrepancies with our own docs (wrong field name for the
+  merchant reference, undocumented fields, an extra `mandateStatus` value, a paging shape missing
+  fields our sample shows) - see docs/COMPATIBILITY.md for each. Also added
+  `LenientStringJsonConverter` for `GetMandateDebitStatusAsync`'s `responseMessage`, which our docs
+  sample shows as an empty object instead of a string there.
 
 ## [0.1.0] - 2026-06-29
 
