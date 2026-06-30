@@ -9,6 +9,25 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [0.4.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.3.0...v0.4.0) (2026-06-30)
+
+
+### Features
+
+* add card transactions and automated release tagging ([25a62b3](https://github.com/Monnify/monnify-dotnet-lib/commit/25a62b30c36c7468faad960f48e5872eb9264d8d))
+* add card transactions client (charge, OTP, 3DS authorize) ([73cc17e](https://github.com/Monnify/monnify-dotnet-lib/commit/73cc17ea37382099bbefa50423ed48856ac9e8dc))
+* add direct debit mandates client ([d8f772d](https://github.com/Monnify/monnify-dotnet-lib/commit/d8f772d03d17b6463abe86ebd7adbde6db48f411))
+* add direct debit mandates client ([456d369](https://github.com/Monnify/monnify-dotnet-lib/commit/456d3697fd32f61d9f1fc76f10c58f41b079c352))
+* Add limit profiles and sub-account management to IMonnifyCollectionsClient ([e13af00](https://github.com/Monnify/monnify-dotnet-lib/commit/e13af001ee07b831277cb8a12beb2b594a7f4866))
+* Implement refund management in IMonnifyCollectionsClient with new endpoints and models ([807beee](https://github.com/Monnify/monnify-dotnet-lib/commit/807beeeb8aba3969debdd4afb9fa42c81aa43625))
+* sub-accounts, limit profiles, and refunds ([338c5de](https://github.com/Monnify/monnify-dotnet-lib/commit/338c5de8e7823a6b25c6f4885a2068e6a468abe8))
+
+
+### Bug Fixes
+
+* skip-github-release silently skipped tag creation too ([6fc0e40](https://github.com/Monnify/monnify-dotnet-lib/commit/6fc0e402bdfc8b27a09841a6a4b41ff151dee83d))
+* update action-gh-release to version 3 for publishing GitHub releases ([427c440](https://github.com/Monnify/monnify-dotnet-lib/commit/427c440d096c54f3fc61cb8b77e23b5875d4730c))
+
 ## [0.3.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.2.0...v0.3.0) (2026-06-30)
 
 
