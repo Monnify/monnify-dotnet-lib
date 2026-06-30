@@ -11,43 +11,69 @@ own version is independent of Monnify's API versioning.
 
 ## [Unreleased]
 
-## [0.3.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.2.0...v0.3.0) — unreleased
+### Features
 
-### Added
-- `IMonnifyDisbursementsClient`: customer wallets — `CreateWalletAsync`, `GetWalletsAsync`,
-  `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync`. Note: the balance endpoint uses
-  `accountNumber` (not `walletReference` as our docs show).
-- `IMonnifyCollectionsClient`: refunds — `InitiateRefundAsync`, `GetRefundAsync`, `GetRefundsAsync`.
-- `IMonnifyCollectionsClient`: limit profiles — `CreateLimitProfileAsync`, `GetLimitProfilesAsync`,
-  `UpdateLimitProfileAsync`; and `CreateReservedAccountWithLimitAsync`,
-  `UpdateReservedAccountLimitAsync` for attaching limit profiles to reserved accounts.
-- `IMonnifyCollectionsClient`: sub-accounts — `CreateSubAccountsAsync`, `GetSubAccountsAsync`,
-  `UpdateSubAccountAsync`, `DeleteSubAccountAsync`. Create takes an array body (not a single object)
-  and the delete endpoint returns no `responseBody`. Requires relationship-manager approval for live.
-- `IMonnifyCollectionsClient`: direct debit mandates — `CreateMandateAsync`, `GetMandatesAsync`,
-  `DebitMandateAsync`, `GetMandateDebitStatusAsync`, `CancelMandateAsync`, `ListMandatesAsync`.
-  Sandbox testing surfaced several real discrepancies with our own docs (wrong field name for the
-  merchant reference, undocumented fields, an extra `mandateStatus` value, a paging shape missing
-  fields our sample shows) — see docs/COMPATIBILITY.md for each. Also added
-  `LenientStringJsonConverter` for `GetMandateDebitStatusAsync`'s `responseMessage`, which our docs
-  sample shows as an empty object instead of a string there.
+* add customer wallet support (`CreateWalletAsync`, `GetWalletsAsync`, `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync`) ([e2bc8d2](https://github.com/Monnify/monnify-dotnet-lib/commit/e2bc8d2))
 
-### Fixed
-- `release.yml`: corrected `action-gh-release` to v3 and removed a flag that was silently
-  suppressing tag creation.
+## [0.5.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.4.0...v0.5.0) (2026-06-30)
 
-## [0.2.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.1.0...v0.2.0) — 2026-06-30
 
-### Added
-- `IMonnifyCollectionsClient`: card charging — `ChargeAsync` (OTP and 3DS paths via
-  `AuthorizeOtpAsync` and `Authorize3dsAsync`). Automatic retry is disabled on `ChargeAsync`
-  for the same reason as disbursement-initiating calls: an ambiguous failure should be resolved
-  by querying the transaction status, not by resending the charge.
+### Features
 
-### Changed
-- Release automation: `release.yml` now uses Nerdbank.GitVersioning to compute the version
-  from `version.json` and pushes a `vX.Y.Z` tag on merge to `main`, gating the NuGet publish
-  behind a manual approval step in the `nuget-release` GitHub Environment.
+* add card transactions and automated release tagging ([25a62b3](https://github.com/Monnify/monnify-dotnet-lib/commit/25a62b30c36c7468faad960f48e5872eb9264d8d))
+* add card transactions client (charge, OTP, 3DS authorize) ([73cc17e](https://github.com/Monnify/monnify-dotnet-lib/commit/73cc17ea37382099bbefa50423ed48856ac9e8dc))
+* add direct debit mandates client ([d8f772d](https://github.com/Monnify/monnify-dotnet-lib/commit/d8f772d03d17b6463abe86ebd7adbde6db48f411))
+* add direct debit mandates client ([456d369](https://github.com/Monnify/monnify-dotnet-lib/commit/456d3697fd32f61d9f1fc76f10c58f41b079c352))
+* Add limit profiles and sub-account management to IMonnifyCollectionsClient ([e13af00](https://github.com/Monnify/monnify-dotnet-lib/commit/e13af001ee07b831277cb8a12beb2b594a7f4866))
+* Implement refund management in IMonnifyCollectionsClient with new endpoints and models ([807beee](https://github.com/Monnify/monnify-dotnet-lib/commit/807beeeb8aba3969debdd4afb9fa42c81aa43625))
+* sub-accounts, limit profiles, and refunds ([338c5de](https://github.com/Monnify/monnify-dotnet-lib/commit/338c5de8e7823a6b25c6f4885a2068e6a468abe8))
+
+
+### Bug Fixes
+
+* skip-github-release silently skipped tag creation too ([6fc0e40](https://github.com/Monnify/monnify-dotnet-lib/commit/6fc0e402bdfc8b27a09841a6a4b41ff151dee83d))
+* update action-gh-release to version 3 for publishing GitHub releases ([427c440](https://github.com/Monnify/monnify-dotnet-lib/commit/427c440d096c54f3fc61cb8b77e23b5875d4730c))
+
+## [0.4.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.3.0...v0.4.0) (2026-06-30)
+
+
+### Features
+
+* add card transactions and automated release tagging ([25a62b3](https://github.com/Monnify/monnify-dotnet-lib/commit/25a62b30c36c7468faad960f48e5872eb9264d8d))
+* add card transactions client (charge, OTP, 3DS authorize) ([73cc17e](https://github.com/Monnify/monnify-dotnet-lib/commit/73cc17ea37382099bbefa50423ed48856ac9e8dc))
+* add direct debit mandates client ([d8f772d](https://github.com/Monnify/monnify-dotnet-lib/commit/d8f772d03d17b6463abe86ebd7adbde6db48f411))
+* add direct debit mandates client ([456d369](https://github.com/Monnify/monnify-dotnet-lib/commit/456d3697fd32f61d9f1fc76f10c58f41b079c352))
+* Add limit profiles and sub-account management to IMonnifyCollectionsClient ([e13af00](https://github.com/Monnify/monnify-dotnet-lib/commit/e13af001ee07b831277cb8a12beb2b594a7f4866))
+* Implement refund management in IMonnifyCollectionsClient with new endpoints and models ([807beee](https://github.com/Monnify/monnify-dotnet-lib/commit/807beeeb8aba3969debdd4afb9fa42c81aa43625))
+* sub-accounts, limit profiles, and refunds ([338c5de](https://github.com/Monnify/monnify-dotnet-lib/commit/338c5de8e7823a6b25c6f4885a2068e6a468abe8))
+
+
+### Bug Fixes
+
+* skip-github-release silently skipped tag creation too ([6fc0e40](https://github.com/Monnify/monnify-dotnet-lib/commit/6fc0e402bdfc8b27a09841a6a4b41ff151dee83d))
+* update action-gh-release to version 3 for publishing GitHub releases ([427c440](https://github.com/Monnify/monnify-dotnet-lib/commit/427c440d096c54f3fc61cb8b77e23b5875d4730c))
+
+## [0.3.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.2.0...v0.3.0) (2026-06-30)
+
+
+### Features
+
+* add direct debit mandates client ([d8f772d](https://github.com/Monnify/monnify-dotnet-lib/commit/d8f772d03d17b6463abe86ebd7adbde6db48f411))
+* add direct debit mandates client ([456d369](https://github.com/Monnify/monnify-dotnet-lib/commit/456d3697fd32f61d9f1fc76f10c58f41b079c352))
+
+
+### Bug Fixes
+
+* skip-github-release silently skipped tag creation too ([6fc0e40](https://github.com/Monnify/monnify-dotnet-lib/commit/6fc0e402bdfc8b27a09841a6a4b41ff151dee83d))
+* update action-gh-release to version 3 for publishing GitHub releases ([427c440](https://github.com/Monnify/monnify-dotnet-lib/commit/427c440d096c54f3fc61cb8b77e23b5875d4730c))
+
+## [0.2.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.1.0...v0.2.0) (2026-06-30)
+
+
+### Features
+
+* add card transactions and automated release tagging ([25a62b3](https://github.com/Monnify/monnify-dotnet-lib/commit/25a62b30c36c7468faad960f48e5872eb9264d8d))
+* add card transactions client (charge, OTP, 3DS authorize) ([73cc17e](https://github.com/Monnify/monnify-dotnet-lib/commit/73cc17ea37382099bbefa50423ed48856ac9e8dc))
 
 ## [0.1.0] - 2026-06-29
 
