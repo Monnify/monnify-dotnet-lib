@@ -195,6 +195,82 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         return SendAsync<Transaction>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
+    public Task<MandateActionResult> CreateMandateAsync(CreateMandateRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Mandates.Create)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<MandateActionResult>(httpRequest, cancellationToken);
+    }
+
+    public Task<IReadOnlyList<Mandate>> GetMandatesAsync(string mandateReferences, CancellationToken cancellationToken = default)
+    {
+        RequireValue(mandateReferences, nameof(mandateReferences));
+        var path = $"{MonnifyApiPaths.Collections.Mandates.Base}?mandateReferences={Uri.EscapeDataString(mandateReferences)}";
+        return SendAsync<IReadOnlyList<Mandate>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<MandateDebitResult> DebitMandateAsync(DebitMandateRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Mandates.Debit)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<MandateDebitResult>(httpRequest, cancellationToken);
+    }
+
+    public Task<MandateDebitResult> GetMandateDebitStatusAsync(string paymentReference, CancellationToken cancellationToken = default)
+    {
+        RequireValue(paymentReference, nameof(paymentReference));
+        var path = $"{MonnifyApiPaths.Collections.Mandates.DebitStatus}?paymentReference={Uri.EscapeDataString(paymentReference)}";
+        return SendAsync<MandateDebitResult>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<MandateActionResult> CancelMandateAsync(string mandateCode, CancellationToken cancellationToken = default)
+    {
+        RequireValue(mandateCode, nameof(mandateCode));
+        var path = $"{MonnifyApiPaths.Collections.Mandates.Cancel}/{Uri.EscapeDataString(mandateCode)}";
+        // HttpMethod.Patch isn't available on netstandard2.0; construct it explicitly instead.
+        return SendAsync<MandateActionResult>(new HttpRequestMessage(new HttpMethod("PATCH"), path), cancellationToken);
+    }
+
+    public Task<MandateListResult> ListMandatesAsync(
+        ListMandatesFilter filter, int page = 0, int limit = 20, CancellationToken cancellationToken = default)
+    {
+        if (filter is null)
+        {
+            throw new ArgumentNullException(nameof(filter));
+        }
+
+        RequireValue(filter.StartDate, nameof(filter.StartDate));
+        RequireValue(filter.EndDate, nameof(filter.EndDate));
+
+        var query = new List<string>
+        {
+            $"startDate={Uri.EscapeDataString(filter.StartDate)}",
+            $"endDate={Uri.EscapeDataString(filter.EndDate)}",
+            $"page={page}",
+            $"limit={limit}",
+        };
+        AppendIfPresent(query, "customerEmail", filter.CustomerEmail);
+        AppendIfPresent(query, "schemeCode", filter.SchemeCode);
+        AppendIfPresent(query, "mandateStatus", filter.MandateStatus);
+
+        var path = $"{MonnifyApiPaths.Collections.Mandates.List}?{string.Join("&", query)}";
+        return SendAsync<MandateListResult>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
     private static void AppendIfPresent(List<string> query, string key, string? value)
     {
         if (!string.IsNullOrWhiteSpace(value))
