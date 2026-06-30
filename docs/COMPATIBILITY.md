@@ -45,6 +45,11 @@ Status legend:
 | `IMonnifyCollectionsClient.GetMandateDebitStatusAsync` | `GET /api/v1/direct-debit/mandate/debit-status?paymentReference=` | **Implemented** | `responseMessage` can be `{}` instead of a string - handled via `LenientStringJsonConverter` |
 | `IMonnifyCollectionsClient.CancelMandateAsync` | `PATCH /api/v1/direct-debit/mandate/cancel-mandate/{mandateCode}` | **Implemented** | Sandbox-verified against a real mandate created in this session |
 | `IMonnifyCollectionsClient.ListMandatesAsync` | `GET /api/v1/direct-debit/mandates?startDate=&endDate=&...` | **Implemented** | Own paging shape; `first`/`numberOfElements`/`empty` are nullable since the sandbox sometimes omits them |
+| `IMonnifyCollectionsClient.CreatePaycodeAsync` | `POST /api/v1/paycode` | **Implemented** | Requires paycode feature activation; `clientId` in the body is the merchant's API key. Sandbox returns "Unable to process request" if not activated |
+| `IMonnifyCollectionsClient.GetPaycodesAsync` | `GET /api/v1/paycode?transactionReference=&beneficiaryName=&transactionStatus=&from=&to=` | **Implemented** | `from`/`to` are unix timestamps; `paycode` field is masked (e.g. `******46`) in list and single-get responses |
+| `IMonnifyCollectionsClient.GetPaycodeAsync` | `GET /api/v1/paycode/{paycodeReference}` | **Implemented** | Returns masked paycode; response omits `requestSuccessful` field (handled via nullable envelope) |
+| `IMonnifyCollectionsClient.CancelPaycodeAsync` | `DELETE /api/v1/paycode/{paycodeReference}` | **Implemented** | Returns the cancelled paycode object; sandbox discovered undocumented `cancelDate` field |
+| `IMonnifyCollectionsClient.GetUnmaskedPaycodeAsync` | `GET /api/v1/paycode/{paycodeReference}/authorize` | **Implemented** | Returns the unmasked paycode value (e.g. `04797046` instead of `******46`) |
 | *(Collections — card tokenization)* | TBD | Planned | |
 | *(Collections — Payment Links)* | N/A | Out of scope | Dashboard-only feature, no API |
 | `IMonnifyDisbursementsClient.InitiateSingleTransferAsync` | `POST /api/v2/disbursements/single` | **Implemented** | Requires Transfer feature activation (sales@monnify.com); automatic retry disabled |

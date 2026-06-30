@@ -75,6 +75,11 @@ internal static class MonnifyApiPaths
             public const string ReservedAccountLimit = "/api/v1/bank-transfer/reserved-accounts/limit";
         }
 
+        internal static class Paycodes
+        {
+            public const string Base = "/api/v1/paycode";
+        }
+
         internal static class Mandates
         {
             public const string Create = "/api/v1/direct-debit/mandate/create";

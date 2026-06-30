@@ -249,4 +249,26 @@ public class CollectionsSandboxTests : IClassFixture<SandboxClientFixture>
         var queried = await client.QueryTransactionAsync(paymentReference: reference);
         Assert.Equal(reference, queried.PaymentReference);
     }
+
+    [SkippableFact]
+    public async Task PaycodeReadOperations_AgainstRealSandbox_ListGetAndAuthorize()
+    {
+        Skip.IfNot(SandboxCredentials.IsAvailable, "Sandbox credentials are not set.");
+
+        var client = _fixture.Provider.GetRequiredService<IMonnifyCollectionsClient>();
+
+        var page = await client.GetPaycodesAsync();
+        Assert.NotNull(page.Content);
+        Assert.True(page.TotalElements > 0, "Expected at least one paycode in the sandbox.");
+
+        var first = page.Content[0];
+        Assert.False(string.IsNullOrWhiteSpace(first.PaycodeReference));
+
+        var byRef = await client.GetPaycodeAsync(first.PaycodeReference);
+        Assert.Equal(first.PaycodeReference, byRef.PaycodeReference);
+
+        var unmasked = await client.GetUnmaskedPaycodeAsync(first.PaycodeReference);
+        Assert.Equal(first.PaycodeReference, unmasked.PaycodeReference);
+        Assert.False(unmasked.PaycodeValue.StartsWith("***"), "Authorize endpoint should return unmasked paycode.");
+    }
 }

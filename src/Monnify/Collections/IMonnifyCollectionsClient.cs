@@ -161,4 +161,23 @@ public interface IMonnifyCollectionsClient
     /// </summary>
     Task<MandateListResult> ListMandatesAsync(
         ListMandatesFilter filter, int page = 0, int limit = 20, CancellationToken cancellationToken = default);
+
+    /// <summary>Creates a paycode that a beneficiary can use to collect cash at an agent point.</summary>
+    Task<Paycode> CreatePaycodeAsync(CreatePaycodeRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns a paged history of generated paycodes, optionally filtered by transaction
+    /// reference, beneficiary name, status, or a date range (unix timestamps).
+    /// </summary>
+    Task<MonnifyPagedResult<Paycode>> GetPaycodesAsync(
+        PaycodeSearchFilter? filter = null, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns the details of a specific paycode by its merchant reference.</summary>
+    Task<Paycode> GetPaycodeAsync(string paycodeReference, CancellationToken cancellationToken = default);
+
+    /// <summary>Cancels an active paycode so it can no longer be used for cash collection.</summary>
+    Task<Paycode> CancelPaycodeAsync(string paycodeReference, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns the unmasked (clear) paycode value for a given paycode reference.</summary>
+    Task<Paycode> GetUnmaskedPaycodeAsync(string paycodeReference, CancellationToken cancellationToken = default);
 }

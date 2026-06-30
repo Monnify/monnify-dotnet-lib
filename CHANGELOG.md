@@ -13,7 +13,12 @@ own version is independent of Monnify's API versioning.
 
 ### Features
 
-* add customer wallet support (`CreateWalletAsync`, `GetWalletsAsync`, `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync`) ([e2bc8d2](https://github.com/Monnify/monnify-dotnet-lib/commit/e2bc8d2))
+* add paycode support — `CreatePaycodeAsync`, `GetPaycodesAsync`, `GetPaycodeAsync`, `CancelPaycodeAsync`, `GetUnmaskedPaycodeAsync` (`IMonnifyCollectionsClient`)
+* add customer wallet support — `CreateWalletAsync`, `GetWalletsAsync`, `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync` (`IMonnifyDisbursementsClient`) ([e2bc8d2](https://github.com/Monnify/monnify-dotnet-lib/commit/e2bc8d2))
+
+### Fixed
+
+* envelope handling now tolerates endpoints (e.g. paycodes) that omit `requestSuccessful` from their response
 
 ## [0.5.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.4.0...v0.5.0) (2026-06-30)
 
