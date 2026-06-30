@@ -153,6 +153,45 @@ internal sealed class MonnifyDisbursementsClient : MonnifyHttpClientBase, IMonni
         return SendAsync<WalletBalance>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
+    public Task<CustomerWallet> CreateWalletAsync(CreateWalletRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Disbursements.CustomerWallets.Base)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<CustomerWallet>(httpRequest, cancellationToken);
+    }
+
+    public Task<MonnifyPagedResult<CustomerWallet>> GetWalletsAsync(
+        string? walletReference = null, int pageNo = 0, int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        var query = new List<string> { $"pageNo={pageNo}", $"pageSize={pageSize}" };
+        AppendIfPresent(query, "walletReference", walletReference);
+        var path = $"{MonnifyApiPaths.Disbursements.CustomerWallets.Base}?{string.Join("&", query)}";
+        return SendAsync<MonnifyPagedResult<CustomerWallet>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<WalletBalance> GetCustomerWalletBalanceAsync(string accountNumber, CancellationToken cancellationToken = default)
+    {
+        RequireValue(accountNumber, nameof(accountNumber));
+        var path = $"{MonnifyApiPaths.Disbursements.CustomerWallets.Balance}?accountNumber={Uri.EscapeDataString(accountNumber)}";
+        return SendAsync<WalletBalance>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<MonnifyPagedResult<WalletTransaction>> GetWalletTransactionsAsync(
+        string accountNumber, int pageNo = 0, int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        RequireValue(accountNumber, nameof(accountNumber));
+        var path = $"{MonnifyApiPaths.Disbursements.CustomerWallets.Transactions}" +
+                   $"?accountNumber={Uri.EscapeDataString(accountNumber)}&pageNo={pageNo}&pageSize={pageSize}";
+        return SendAsync<MonnifyPagedResult<WalletTransaction>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
     private static void AppendIfPresent(List<string> query, string key, string? value)
     {
         if (!string.IsNullOrWhiteSpace(value))

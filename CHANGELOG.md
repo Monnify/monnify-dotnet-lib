@@ -20,6 +20,9 @@ own version is independent of Monnify's API versioning.
 ## [Unreleased]
 
 ### Added
+- `IMonnifyDisbursementsClient`: customer wallets - `CreateWalletAsync`, `GetWalletsAsync`,
+  `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync`. Note: the balance endpoint uses
+  `accountNumber` (not `walletReference` as our docs show).
 - `IMonnifyCollectionsClient`: refunds - `InitiateRefundAsync`, `GetRefundAsync`, `GetRefundsAsync`.
 - `IMonnifyCollectionsClient`: limit profiles - `CreateLimitProfileAsync`, `GetLimitProfilesAsync`,
   `UpdateLimitProfileAsync`; and `CreateReservedAccountWithLimitAsync`,

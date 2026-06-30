@@ -60,6 +60,10 @@ Status legend:
 | `IMonnifyDisbursementsClient.GetBulkTransfersAsync` | `GET /api/v2/disbursements/bulk?sourceAccountNumber=&pageNo=&pageSize=` | **Implemented** | Docs show a `/transactions` suffix on this path; that 404s — omit it |
 | `IMonnifyDisbursementsClient.SearchTransactionsAsync` | `GET /api/v2/disbursements/search-transactions?sourceAccountNumber=&...` | **Implemented** | |
 | `IMonnifyDisbursementsClient.GetWalletBalanceAsync` | `GET /api/v2/disbursements/wallet-balance?accountNumber=` | **Implemented** | Accepts both numeric and quoted-string balances via `AllowReadingFromString` |
+| `IMonnifyDisbursementsClient.CreateWalletAsync` | `POST /api/v1/disbursements/wallet` | **Implemented** | Requires wallet feature activation; `bvnDetails` is a nested object |
+| `IMonnifyDisbursementsClient.GetWalletsAsync` | `GET /api/v1/disbursements/wallet?pageNo=&pageSize=&walletReference=` | **Implemented** | 21 wallets in sandbox; `createdOn` is absent in list items but present on create response |
+| `IMonnifyDisbursementsClient.GetCustomerWalletBalanceAsync` | `GET /api/v1/disbursements/wallet/balance?accountNumber=` | **Implemented** 
+| `IMonnifyDisbursementsClient.GetWalletTransactionsAsync` | `GET /api/v1/disbursements/wallet/transactions?accountNumber=&pageNo=&pageSize=` | **Implemented** | Balance amounts sent as large integers (e.g. 5000000000); `AllowReadingFromString` applied defensively |
 | `IMonnifyVerificationClient.ValidateAccountNumberAsync` | `GET /api/v1/disbursements/account/validate?accountNumber=&bankCode=` | **Implemented** | Free on both sandbox and live |
 | `IMonnifyVerificationClient.MatchBvnDetailsAsync` | `POST /api/v1/vas/bvn-details-match` | **Implemented** | Bills the merchant wallet per request |
 | `IMonnifyVerificationClient.MatchBvnToAccountAsync` | `POST /api/v1/vas/bvn-account-match` | **Implemented** | Bills the merchant wallet per request |

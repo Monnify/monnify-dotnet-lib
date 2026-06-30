@@ -110,6 +110,13 @@ internal static class MonnifyApiPaths
 
         public const string SearchTransactions = "/api/v2/disbursements/search-transactions";
         public const string WalletBalance = "/api/v2/disbursements/wallet-balance";
+
+        internal static class CustomerWallets
+        {
+            public const string Base = "/api/v1/disbursements/wallet";
+            public const string Balance = "/api/v1/disbursements/wallet/balance";
+            public const string Transactions = "/api/v1/disbursements/wallet/transactions";
+        }
     }
 
     internal static class Bills

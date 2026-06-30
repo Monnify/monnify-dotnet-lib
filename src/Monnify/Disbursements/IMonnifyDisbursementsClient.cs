@@ -66,4 +66,24 @@ public interface IMonnifyDisbursementsClient
         int pageNo = 0, int pageSize = 10, CancellationToken cancellationToken = default);
 
     Task<WalletBalance> GetWalletBalanceAsync(string accountNumber, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a wallet for a customer. Requires the wallet feature to be enabled for the
+    /// merchant — contact sales@monnify.com to request access.
+    /// </summary>
+    Task<CustomerWallet> CreateWalletAsync(CreateWalletRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns all customer wallets on the integration, optionally filtered by
+    /// <paramref name="walletReference"/> to retrieve a specific wallet.
+    /// </summary>
+    Task<MonnifyPagedResult<CustomerWallet>> GetWalletsAsync(
+        string? walletReference = null, int pageNo = 0, int pageSize = 10, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns the available and ledger balance for a specific customer wallet.</summary>
+    Task<WalletBalance> GetCustomerWalletBalanceAsync(string accountNumber, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns transactions for a customer wallet, identified by its account number.</summary>
+    Task<MonnifyPagedResult<WalletTransaction>> GetWalletTransactionsAsync(
+        string accountNumber, int pageNo = 0, int pageSize = 10, CancellationToken cancellationToken = default);
 }
