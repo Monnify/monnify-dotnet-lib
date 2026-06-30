@@ -50,6 +50,13 @@ internal static class MonnifyApiPaths
             public const string Create = "/api/v1/invoice/create";
             public const string Base = "/api/v1/invoice";
         }
+
+        internal static class Cards
+        {
+            public const string Charge = "/api/v1/merchant/cards/charge";
+            public const string AuthorizeOtp = "/api/v1/merchant/cards/otp/authorize";
+            public const string Authorize3ds = "/api/v1/sdk/cards/secure-3d/authorize";
+        }
     }
 
     internal static class Disbursements

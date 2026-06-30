@@ -48,7 +48,15 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpClient<IMonnifyBanksClient, MonnifyBanksClient>(ConfigureBaseAddress).AddMonnifyDefaults();
         services.AddHttpClient<IMonnifyVerificationClient, MonnifyVerificationClient>(ConfigureBaseAddress).AddMonnifyDefaults();
-        services.AddHttpClient<IMonnifyCollectionsClient, MonnifyCollectionsClient>(ConfigureBaseAddress).AddMonnifyDefaults();
+
+        // allowAutomaticRetry: false - ChargeAsync directly debits a card, same reasoning as
+        // Disbursements/Bills below: an ambiguous failure must be resolved by querying the
+        // transaction's status, not retried with the same card details. This is more conservative
+        // than the rest of this client strictly needs (its other methods set up a payment
+        // instrument rather than moving money directly), traded for keeping every collection
+        // method, including card charges, on one client.
+        services.AddHttpClient<IMonnifyCollectionsClient, MonnifyCollectionsClient>(ConfigureBaseAddress)
+            .AddMonnifyDefaults(allowAutomaticRetry: false);
 
         // allowAutomaticRetry: false - an ambiguous failure on a transfer-initiating call must be
         // resolved by querying status with the same reference, not by blindly resending the same

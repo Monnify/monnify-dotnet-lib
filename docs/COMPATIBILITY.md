@@ -20,7 +20,10 @@ Status legend:
 | `IMonnifyCollectionsClient.GetInvoiceAsync` | `GET /api/v1/invoice/{invoiceReference}/details` | **Implemented** | |
 | `IMonnifyCollectionsClient.GetInvoicesAsync` | `GET /api/v1/invoice/all?page=&size=` | **Implemented** | |
 | `IMonnifyCollectionsClient.CancelInvoiceAsync` | `DELETE /api/v1/invoice/{invoiceReference}/cancel` | **Implemented** | |
-| `IMonnifyCollectionsClient.InitiateBankTransferAsync` | `POST /api/v1/merchant/bank-transfer/init-payment` | **Implemented** | Generates a one-time dynamic account for an already-initialized transaction |
+| `IMonnifyCollectionsClient.InitiateBankTransferAsync` | `POST /api/v1/merchant/bank-transfer/init-payment` | **Implemented** | Real response field is `ussdPayment`, not `ussdCode` as our simplified doc sample shows |
+| `IMonnifyCollectionsClient.ChargeAsync` | `POST /api/v1/merchant/cards/charge` | **Implemented** | Requires a `transactionReference` from `InitializeTransactionAsync` first. Automatic retry disabled - this directly debits a card |
+| `IMonnifyCollectionsClient.AuthorizeOtpAsync` | `POST /api/v1/merchant/cards/otp/authorize` | **Implemented** | Not sandbox-verified - blocked on the `ChargeAsync` bin issue above |
+| `IMonnifyCollectionsClient.Authorize3dsAsync` | `POST /api/v1/sdk/cards/secure-3d/authorize` | **Implemented** | Restricted to PCI DSS-certified merchants, requires separate activation |
 | `IMonnifyCollectionsClient.SearchTransactionsAsync` | `GET /api/v1/transactions/search?page=&size=&...` | **Implemented** | Many optional filters (reference, amount range, customer, status, date range) |
 | `IMonnifyCollectionsClient.GetTransactionAsync` | `GET /api/v2/transactions/{transactionReference}` | **Implemented** | Amount fields are quoted strings; `decimal` via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyCollectionsClient.QueryTransactionAsync` | `GET /api/v2/merchant/transactions/query?transactionReference=&paymentReference=` | **Implemented** | Same response shape as `GetTransactionAsync`; requires at least one query parameter |
