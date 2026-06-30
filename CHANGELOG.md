@@ -20,12 +20,6 @@ own version is independent of Monnify's API versioning.
 ## [Unreleased]
 
 ### Added
-- `IMonnifyCollectionsClient`: `ChargeAsync`, `AuthorizeOtpAsync`, `Authorize3dsAsync` for direct
-  card charges. The whole client now registers with automatic retry disabled, same reasoning as
-  Disbursements/Bills, since `ChargeAsync` directly debits a card. See docs/COMPATIBILITY.md for
-  sandbox-verification notes.
-- Corrected `InitiateBankTransferAsync`'s doc note: the real response field is `ussdPayment`, not
-  `ussdCode` as our simplified doc sample shows (the SDK already had this right).
 - `IMonnifyCollectionsClient`: direct debit mandates - `CreateMandateAsync`, `GetMandatesAsync`,
   `DebitMandateAsync`, `GetMandateDebitStatusAsync`, `CancelMandateAsync`, `ListMandatesAsync`.
   Sandbox testing surfaced several real discrepancies with our own docs (wrong field name for the
