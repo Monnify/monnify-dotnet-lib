@@ -85,4 +85,11 @@ internal static class MonnifyApiPaths
         public const string Requery = "/api/v1/vas/bills-payment/requery";
         public const string ValidateCustomer = "/api/v1/vas/bills-payment/validate-customer";
     }
+
+    internal static class Cards
+    {
+        public const string Charge = "/api/v1/merchant/cards/charge";
+        public const string AuthorizeOtp = "/api/v1/merchant/cards/otp/authorize";
+        public const string Authorize3ds = "/api/v1/sdk/cards/secure-3d/authorize";
+    }
 }

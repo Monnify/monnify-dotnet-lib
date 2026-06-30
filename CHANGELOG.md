@@ -11,6 +11,11 @@ own version is independent of Monnify's API versioning.
 
 ## [Unreleased]
 
+### Added
+- `IMonnifyCardsClient` (`ChargeAsync`, `AuthorizeOtpAsync`, `Authorize3dsAsync`) for direct card
+  charges, exposed on `MonnifyClient` as `Cards`. Automatic retry disabled, same reasoning as
+  Disbursements/Bills. See docs/COMPATIBILITY.md for sandbox-verification notes.
+
 ## [0.1.0] - 2026-06-29
 
 ### Fixed

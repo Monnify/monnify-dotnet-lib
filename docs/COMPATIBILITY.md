@@ -56,6 +56,9 @@ Status legend:
 | `IMonnifyBillsClient.ValidateCustomerAsync` | `POST /api/v1/vas/bills-payment/validate-customer` | **Implemented** | `validationReference` lives inside `vendInstruction`, not top-level as our docs prose implies. `minAmount`/`maxAmount` can appear top-level for amount-constrained products |
 | `IMonnifyBillsClient.VendAsync` | `POST /api/v1/vas/bills-payment/vend` | **Implemented** | Automatic retry disabled, same reasoning as Disbursements |
 | `IMonnifyBillsClient.RequeryAsync` | `GET /api/v1/vas/bills-payment/requery?reference=` | **Implemented** | Same response shape as `VendAsync` |
+| `IMonnifyCardsClient.ChargeAsync` | `POST /api/v1/merchant/cards/charge` | **Implemented** | Requires a `transactionReference` from `InitializeTransactionAsync` first. Automatic retry disabled - this directly debits a card |
+| `IMonnifyCardsClient.AuthorizeOtpAsync` | `POST /api/v1/merchant/cards/otp/authorize` | **Implemented** | Not sandbox-verified - blocked on the `ChargeAsync` bin issue above, since this needs a real `tokenId` from a successful OTP-required charge |
+| `IMonnifyCardsClient.Authorize3dsAsync` | `POST /api/v1/sdk/cards/secure-3d/authorize` | **Implemented** | Restricted to PCI DSS-certified merchants, requires separate activation. Calling it without a prior successful charge correctly returned `"No Card Payment found for this transaction."` rather than an auth/activation error, so the endpoint itself is reachable on this account; the OTP-required response shape is otherwise unverified for the same reason as `AuthorizeOtpAsync` |
 
 Update this table whenever a method moves from Planned to Implemented, or its
 endpoint changes.

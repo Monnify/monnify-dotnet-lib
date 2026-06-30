@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Monnify.Authentication;
 using Monnify.Banks;
 using Monnify.Bills;
+using Monnify.Cards;
 using Monnify.Collections;
 using Monnify.Disbursements;
 using Monnify.Http;
@@ -59,6 +60,12 @@ public static class ServiceCollectionExtensions
         // allowAutomaticRetry: false - VendAsync moves money, same reasoning as Disbursements above:
         // an ambiguous failure must be resolved via RequeryAsync with the same reference, not retried.
         services.AddHttpClient<IMonnifyBillsClient, MonnifyBillsClient>(ConfigureBaseAddress)
+            .AddMonnifyDefaults(allowAutomaticRetry: false);
+
+        // allowAutomaticRetry: false - ChargeAsync directly debits a card, same reasoning as
+        // Disbursements/Bills above: an ambiguous failure must be resolved by querying the
+        // transaction's status, not retried with the same card details.
+        services.AddHttpClient<IMonnifyCardsClient, MonnifyCardsClient>(ConfigureBaseAddress)
             .AddMonnifyDefaults(allowAutomaticRetry: false);
 
         services.AddTransient<MonnifyClient>();
