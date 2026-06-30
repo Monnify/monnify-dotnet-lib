@@ -9,6 +9,20 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [0.3.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.2.0...v0.3.0) (2026-06-30)
+
+
+### Features
+
+* add direct debit mandates client ([d8f772d](https://github.com/Monnify/monnify-dotnet-lib/commit/d8f772d03d17b6463abe86ebd7adbde6db48f411))
+* add direct debit mandates client ([456d369](https://github.com/Monnify/monnify-dotnet-lib/commit/456d3697fd32f61d9f1fc76f10c58f41b079c352))
+
+
+### Bug Fixes
+
+* skip-github-release silently skipped tag creation too ([6fc0e40](https://github.com/Monnify/monnify-dotnet-lib/commit/6fc0e402bdfc8b27a09841a6a4b41ff151dee83d))
+* update action-gh-release to version 3 for publishing GitHub releases ([427c440](https://github.com/Monnify/monnify-dotnet-lib/commit/427c440d096c54f3fc61cb8b77e23b5875d4730c))
+
 ## [0.2.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.1.0...v0.2.0) (2026-06-30)
 
 
