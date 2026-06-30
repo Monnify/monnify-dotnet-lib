@@ -11,6 +11,8 @@ own version is independent of Monnify's API versioning.
 
 ## [Unreleased]
 
+## [0.3.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.2.0...v0.3.0) — unreleased
+
 ### Added
 - `IMonnifyDisbursementsClient`: customer wallets — `CreateWalletAsync`, `GetWalletsAsync`,
   `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync`. Note: the balance endpoint uses
