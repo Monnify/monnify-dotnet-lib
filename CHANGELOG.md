@@ -20,6 +20,7 @@ own version is independent of Monnify's API versioning.
 ## [Unreleased]
 
 ### Added
+- `IMonnifyCollectionsClient`: refunds - `InitiateRefundAsync`, `GetRefundAsync`, `GetRefundsAsync`.
 - `IMonnifyCollectionsClient`: limit profiles - `CreateLimitProfileAsync`, `GetLimitProfilesAsync`,
   `UpdateLimitProfileAsync`; and `CreateReservedAccountWithLimitAsync`,
   `UpdateReservedAccountLimitAsync` for attaching limit profiles to reserved accounts.

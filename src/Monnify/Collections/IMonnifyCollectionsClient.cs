@@ -78,6 +78,18 @@ public interface IMonnifyCollectionsClient
     Task<Transaction> QueryTransactionAsync(
         string? transactionReference = null, string? paymentReference = null, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Initiates a refund for a completed transaction. Requires prior approval from your
+    /// relationship manager for the live environment.
+    /// </summary>
+    Task<Refund> InitiateRefundAsync(InitiateRefundRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns the current status of a refund by its merchant-supplied refund reference.</summary>
+    Task<Refund> GetRefundAsync(string refundReference, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns all refunds on the integration, newest first.</summary>
+    Task<MonnifyPagedResult<Refund>> GetRefundsAsync(int page = 0, int size = 10, CancellationToken cancellationToken = default);
+
     /// <summary>Creates a transaction limit profile that can be attached to reserved accounts.</summary>
     Task<LimitProfile> CreateLimitProfileAsync(CreateLimitProfileRequest request, CancellationToken cancellationToken = default);
 

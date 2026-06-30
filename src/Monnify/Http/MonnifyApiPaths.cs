@@ -63,6 +63,12 @@ internal static class MonnifyApiPaths
             public const string Base = "/api/v1/sub-accounts";
         }
 
+        internal static class Refunds
+        {
+            public const string Initiate = "/api/v1/refunds/initiate-refund";
+            public const string Base = "/api/v1/refunds";
+        }
+
         internal static class LimitProfiles
         {
             public const string Base = "/api/v1/limit-profile/";

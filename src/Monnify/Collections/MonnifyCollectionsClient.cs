@@ -60,6 +60,33 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         return SendAsync<ReservedAccount>(new HttpRequestMessage(HttpMethod.Delete, path), cancellationToken);
     }
 
+    public Task<Refund> InitiateRefundAsync(InitiateRefundRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Refunds.Initiate)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<Refund>(httpRequest, cancellationToken);
+    }
+
+    public Task<Refund> GetRefundAsync(string refundReference, CancellationToken cancellationToken = default)
+    {
+        RequireValue(refundReference, nameof(refundReference));
+        var path = $"{MonnifyApiPaths.Collections.Refunds.Base}/{Uri.EscapeDataString(refundReference)}";
+        return SendAsync<Refund>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<MonnifyPagedResult<Refund>> GetRefundsAsync(int page = 0, int size = 10, CancellationToken cancellationToken = default)
+    {
+        var path = $"{MonnifyApiPaths.Collections.Refunds.Base}?page={page}&size={size}";
+        return SendAsync<MonnifyPagedResult<Refund>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
     public Task<LimitProfile> CreateLimitProfileAsync(CreateLimitProfileRequest request, CancellationToken cancellationToken = default)
     {
         if (request is null)

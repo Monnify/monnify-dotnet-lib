@@ -27,6 +27,9 @@ Status legend:
 | `IMonnifyCollectionsClient.SearchTransactionsAsync` | `GET /api/v1/transactions/search?page=&size=&...` | **Implemented** | Many optional filters (reference, amount range, customer, status, date range) |
 | `IMonnifyCollectionsClient.GetTransactionAsync` | `GET /api/v2/transactions/{transactionReference}` | **Implemented** | Amount fields are quoted strings; `decimal` via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyCollectionsClient.QueryTransactionAsync` | `GET /api/v2/merchant/transactions/query?transactionReference=&paymentReference=` | **Implemented** | Same response shape as `GetTransactionAsync`; requires at least one query parameter |
+| `IMonnifyCollectionsClient.InitiateRefundAsync` | `POST /api/v1/refunds/initiate-refund` | **Implemented** 
+| `IMonnifyCollectionsClient.GetRefundAsync` | `GET /api/v1/refunds/{refundReference}` | **Implemented** 
+| `IMonnifyCollectionsClient.GetRefundsAsync` | `GET /api/v1/refunds?page=&size=` | **Implemented** 
 | `IMonnifyCollectionsClient.CreateLimitProfileAsync` | `POST /api/v1/limit-profile/` | **Implemented** | Sandbox-verified |
 | `IMonnifyCollectionsClient.GetLimitProfilesAsync` | `GET /api/v1/limit-profile/` | **Implemented** | `pageable`/`sort` are `null` in the real response — not modelled |
 | `IMonnifyCollectionsClient.UpdateLimitProfileAsync` | `PUT /api/v1/limit-profile/{limitProfileCode}` | **Implemented** | Profile code goes in the path; body has only the four editable fields |

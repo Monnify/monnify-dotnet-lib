@@ -96,6 +96,27 @@ public class CollectionsSandboxTests : IClassFixture<SandboxClientFixture>
     }
 
     [SkippableFact]
+    public async Task RefundReadOperations_AgainstRealSandbox_ListAndGetByReference()
+    {
+        Skip.IfNot(CanRun, "Sandbox credentials/contract code are not set.");
+
+        var client = _fixture.Provider.GetRequiredService<IMonnifyCollectionsClient>();
+
+        var page = await client.GetRefundsAsync(page: 0, size: 5);
+        Assert.True(page.TotalElements >= 0);
+
+        if (page.Content.Count > 0)
+        {
+            var first = page.Content[0];
+            Assert.False(string.IsNullOrWhiteSpace(first.RefundReference));
+
+            var byRef = await client.GetRefundAsync(first.RefundReference);
+            Assert.Equal(first.RefundReference, byRef.RefundReference);
+            Assert.Equal(first.RefundStatus, byRef.RefundStatus);
+        }
+    }
+
+    [SkippableFact]
     public async Task LimitProfileLifecycle_AgainstRealSandbox_CreateListUpdateAndApplyToReservedAccount()
     {
         Skip.IfNot(CanRun, "Sandbox credentials/contract code are not set.");
