@@ -88,7 +88,7 @@ jobs:
       # finds that same release by tag and un-drafts it - only after a successful, approved
       # NuGet push - rather than creating a second one.
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: v${{ needs.build-test-pack.outputs.version }}
           files: ./artifacts/*.nupkg
