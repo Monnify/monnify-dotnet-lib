@@ -403,6 +403,60 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         return SendAsync<MandateListResult>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
     }
 
+    public Task<Paycode> CreatePaycodeAsync(CreatePaycodeRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Paycodes.Base)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<Paycode>(httpRequest, cancellationToken);
+    }
+
+    public Task<MonnifyPagedResult<Paycode>> GetPaycodesAsync(
+        PaycodeSearchFilter? filter = null, CancellationToken cancellationToken = default)
+    {
+        var query = new List<string>();
+        if (filter is not null)
+        {
+            AppendIfPresent(query, "transactionReference", filter.TransactionReference);
+            AppendIfPresent(query, "beneficiaryName", filter.BeneficiaryName);
+            AppendIfPresent(query, "transactionStatus", filter.TransactionStatus);
+            if (filter.From.HasValue) { query.Add($"from={filter.From.Value}"); }
+            if (filter.To.HasValue) { query.Add($"to={filter.To.Value}"); }
+        }
+
+        var path = query.Count > 0
+            ? $"{MonnifyApiPaths.Collections.Paycodes.Base}?{string.Join("&", query)}"
+            : MonnifyApiPaths.Collections.Paycodes.Base;
+        return SendAsync<MonnifyPagedResult<Paycode>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<Paycode> GetPaycodeAsync(string paycodeReference, CancellationToken cancellationToken = default)
+    {
+        RequireValue(paycodeReference, nameof(paycodeReference));
+        var path = $"{MonnifyApiPaths.Collections.Paycodes.Base}/{Uri.EscapeDataString(paycodeReference)}";
+        return SendAsync<Paycode>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<Paycode> CancelPaycodeAsync(string paycodeReference, CancellationToken cancellationToken = default)
+    {
+        RequireValue(paycodeReference, nameof(paycodeReference));
+        var path = $"{MonnifyApiPaths.Collections.Paycodes.Base}/{Uri.EscapeDataString(paycodeReference)}";
+        return SendAsync<Paycode>(new HttpRequestMessage(HttpMethod.Delete, path), cancellationToken);
+    }
+
+    public Task<Paycode> GetUnmaskedPaycodeAsync(string paycodeReference, CancellationToken cancellationToken = default)
+    {
+        RequireValue(paycodeReference, nameof(paycodeReference));
+        var path = $"{MonnifyApiPaths.Collections.Paycodes.Base}/{Uri.EscapeDataString(paycodeReference)}/authorize";
+        return SendAsync<Paycode>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
     private static void AppendIfPresent(List<string> query, string key, string? value)
     {
         if (!string.IsNullOrWhiteSpace(value))

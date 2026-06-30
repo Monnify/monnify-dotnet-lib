@@ -107,4 +107,26 @@ public class DisbursementsSandboxTests : IClassFixture<SandboxClientFixture>
         var page = await client.SearchTransactionsAsync(SandboxDisbursementWallet.Value!, pageNo: 0, pageSize: 3);
         Assert.NotNull(page.Content);
     }
+
+    [SkippableFact]
+    public async Task CustomerWallets_AgainstRealSandbox_ListGetBalanceAndTransactions()
+    {
+        Skip.IfNot(SandboxCredentials.IsAvailable, "Sandbox credentials are not set.");
+
+        var client = _fixture.Provider.GetRequiredService<IMonnifyDisbursementsClient>();
+
+        var page = await client.GetWalletsAsync(pageNo: 0, pageSize: 5);
+        Assert.NotNull(page.Content);
+        Assert.True(page.TotalElements > 0, "Expected at least one customer wallet in the sandbox.");
+
+        var wallet = page.Content[0];
+        Assert.False(string.IsNullOrWhiteSpace(wallet.WalletReference));
+        Assert.False(string.IsNullOrWhiteSpace(wallet.AccountNumber));
+
+        var balance = await client.GetCustomerWalletBalanceAsync(wallet.AccountNumber);
+        Assert.True(balance.AvailableBalance >= 0);
+
+        var transactions = await client.GetWalletTransactionsAsync(wallet.AccountNumber, pageNo: 0, pageSize: 5);
+        Assert.NotNull(transactions.Content);
+    }
 }

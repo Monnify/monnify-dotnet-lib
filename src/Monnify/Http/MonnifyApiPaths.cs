@@ -75,6 +75,11 @@ internal static class MonnifyApiPaths
             public const string ReservedAccountLimit = "/api/v1/bank-transfer/reserved-accounts/limit";
         }
 
+        internal static class Paycodes
+        {
+            public const string Base = "/api/v1/paycode";
+        }
+
         internal static class Mandates
         {
             public const string Create = "/api/v1/direct-debit/mandate/create";
@@ -110,6 +115,13 @@ internal static class MonnifyApiPaths
 
         public const string SearchTransactions = "/api/v2/disbursements/search-transactions";
         public const string WalletBalance = "/api/v2/disbursements/wallet-balance";
+
+        internal static class CustomerWallets
+        {
+            public const string Base = "/api/v1/disbursements/wallet";
+            public const string Balance = "/api/v1/disbursements/wallet/balance";
+            public const string Transactions = "/api/v1/disbursements/wallet/transactions";
+        }
     }
 
     internal static class Bills

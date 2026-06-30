@@ -94,7 +94,7 @@ internal sealed class MonnifyTokenProvider : IMonnifyTokenProvider, IDisposable
         }
 
         var responseBody = envelope?.ResponseBody;
-        if (envelope is null || !envelope.RequestSuccessful || string.IsNullOrEmpty(responseBody?.AccessToken))
+        if (envelope is null || envelope.RequestSuccessful == false || string.IsNullOrEmpty(responseBody?.AccessToken))
         {
             throw new MonnifyAuthenticationException(
                 $"Monnify rejected the authentication request: {envelope?.ResponseMessage ?? "unknown error"}.");

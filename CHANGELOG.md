@@ -9,6 +9,17 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [Unreleased]
+
+### Features
+
+* add paycode support — `CreatePaycodeAsync`, `GetPaycodesAsync`, `GetPaycodeAsync`, `CancelPaycodeAsync`, `GetUnmaskedPaycodeAsync` (`IMonnifyCollectionsClient`)
+* add customer wallet support — `CreateWalletAsync`, `GetWalletsAsync`, `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync` (`IMonnifyDisbursementsClient`)
+
+### Fixed
+
+* envelope handling now tolerates endpoints (e.g. paycodes) that omit `requestSuccessful` from their response
+
 ## [0.5.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.4.0...v0.5.0) (2026-06-30)
 
 
@@ -68,24 +79,6 @@ own version is independent of Monnify's API versioning.
 
 * add card transactions and automated release tagging ([25a62b3](https://github.com/Monnify/monnify-dotnet-lib/commit/25a62b30c36c7468faad960f48e5872eb9264d8d))
 * add card transactions client (charge, OTP, 3DS authorize) ([73cc17e](https://github.com/Monnify/monnify-dotnet-lib/commit/73cc17ea37382099bbefa50423ed48856ac9e8dc))
-
-## [Unreleased]
-
-### Added
-- `IMonnifyCollectionsClient`: refunds - `InitiateRefundAsync`, `GetRefundAsync`, `GetRefundsAsync`.
-- `IMonnifyCollectionsClient`: limit profiles - `CreateLimitProfileAsync`, `GetLimitProfilesAsync`,
-  `UpdateLimitProfileAsync`; and `CreateReservedAccountWithLimitAsync`,
-  `UpdateReservedAccountLimitAsync` for attaching limit profiles to reserved accounts.
-- `IMonnifyCollectionsClient`: sub-accounts - `CreateSubAccountsAsync`, `GetSubAccountsAsync`,
-  `UpdateSubAccountAsync`, `DeleteSubAccountAsync`. Create takes an array body (not a single object)
-  and the delete endpoint returns no `responseBody`. Requires relationship-manager approval for live.
-- `IMonnifyCollectionsClient`: direct debit mandates - `CreateMandateAsync`, `GetMandatesAsync`,
-  `DebitMandateAsync`, `GetMandateDebitStatusAsync`, `CancelMandateAsync`, `ListMandatesAsync`.
-  Sandbox testing surfaced several real discrepancies with our own docs (wrong field name for the
-  merchant reference, undocumented fields, an extra `mandateStatus` value, a paging shape missing
-  fields our sample shows) - see docs/COMPATIBILITY.md for each. Also added
-  `LenientStringJsonConverter` for `GetMandateDebitStatusAsync`'s `responseMessage`, which our docs
-  sample shows as an empty object instead of a string there.
 
 ## [0.1.0] - 2026-06-29
 

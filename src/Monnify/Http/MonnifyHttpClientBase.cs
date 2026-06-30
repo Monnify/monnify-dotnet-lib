@@ -35,7 +35,7 @@ internal abstract class MonnifyHttpClientBase
             throw new MonnifyDeserializationException("Failed to parse the response received from Monnify.", json, ex);
         }
 
-        if (envelope is null || !envelope.RequestSuccessful)
+        if (envelope is null || envelope.RequestSuccessful == false)
         {
             throw new MonnifyApiException(
                 envelope?.ResponseCode ?? "UNKNOWN",
@@ -63,7 +63,13 @@ internal abstract class MonnifyHttpClientBase
             throw new MonnifyDeserializationException("Failed to parse the response received from Monnify.", json, ex);
         }
 
-        if (envelope is null || !envelope.RequestSuccessful)
+        // Treat as a definitive failure if RequestSuccessful is explicitly false, or if it is
+        // absent (null) and there is no responseBody — which indicates a non-Monnify error body
+        // (e.g. a gateway rejection) rather than a paycode-style response that omits the field.
+        bool definiteFailure = envelope is null || envelope.RequestSuccessful == false;
+        bool ambiguousNoBody = envelope is not null && envelope.RequestSuccessful is null && envelope.ResponseBody is null;
+
+        if (definiteFailure || ambiguousNoBody)
         {
             throw new MonnifyApiException(
                 envelope?.ResponseCode ?? "UNKNOWN",
@@ -72,7 +78,7 @@ internal abstract class MonnifyHttpClientBase
                 json);
         }
 
-        if (envelope.ResponseBody is null)
+        if (envelope!.ResponseBody is null)
         {
             throw new MonnifyDeserializationException(
                 $"Monnify reported success but returned no {typeof(TResponseBody).Name} response body.", json,
