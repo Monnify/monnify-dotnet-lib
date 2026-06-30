@@ -29,6 +29,10 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      - name: Set version
+        uses: dotnet/nbgv@master
+        id: nbgv
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
 

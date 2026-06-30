@@ -23,6 +23,13 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      # Run NBGV's own cloud step before build so it sets GitHub Actions environment
+      # variables using the native file-command format. Without this, NBGV's MSBuild
+      # task writes to $GITHUB_ENV using a format that newer runners reject.
+      - name: Set version
+        uses: dotnet/nbgv@master
+        id: nbgv
+
       - name: Verify formatting
         run: dotnet format --verify-no-changes --no-restore
 
