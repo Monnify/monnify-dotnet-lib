@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Monnify.Cards;
+namespace Monnify.Collections;
 
 public sealed class ChargeCardResult
 {

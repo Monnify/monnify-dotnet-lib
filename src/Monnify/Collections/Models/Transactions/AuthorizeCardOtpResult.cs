@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Monnify.Cards;
+namespace Monnify.Collections;
 
 /// <summary>Returned by both <c>AuthorizeOtpAsync</c> and <c>Authorize3dsAsync</c> - they share the same shape.</summary>
 public sealed class AuthorizeCardOtpResult

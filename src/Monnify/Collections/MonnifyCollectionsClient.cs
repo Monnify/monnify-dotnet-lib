@@ -109,6 +109,48 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         return SendAsync<BankTransferPaymentDetails>(httpRequest, cancellationToken);
     }
 
+    public Task<ChargeCardResult> ChargeAsync(ChargeCardRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Cards.Charge)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<ChargeCardResult>(httpRequest, cancellationToken);
+    }
+
+    public Task<AuthorizeCardOtpResult> AuthorizeOtpAsync(AuthorizeCardOtpRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Cards.AuthorizeOtp)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<AuthorizeCardOtpResult>(httpRequest, cancellationToken);
+    }
+
+    public Task<AuthorizeCardOtpResult> Authorize3dsAsync(Authorize3dsCardRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Cards.Authorize3ds)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<AuthorizeCardOtpResult>(httpRequest, cancellationToken);
+    }
+
     public Task<MonnifyPagedResult<TransactionSummary>> SearchTransactionsAsync(
         SearchTransactionsRequest? filter = null, int page = 0, int size = 10, CancellationToken cancellationToken = default)
     {

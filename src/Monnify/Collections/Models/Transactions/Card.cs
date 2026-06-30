@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Monnify.Cards;
+namespace Monnify.Collections;
 
 /// <summary>
 /// Raw card details for a direct charge. All fields are modeled as strings (rather than the

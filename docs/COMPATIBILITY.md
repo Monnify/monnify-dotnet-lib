@@ -20,7 +20,10 @@ Status legend:
 | `IMonnifyCollectionsClient.GetInvoiceAsync` | `GET /api/v1/invoice/{invoiceReference}/details` | **Implemented** | |
 | `IMonnifyCollectionsClient.GetInvoicesAsync` | `GET /api/v1/invoice/all?page=&size=` | **Implemented** | |
 | `IMonnifyCollectionsClient.CancelInvoiceAsync` | `DELETE /api/v1/invoice/{invoiceReference}/cancel` | **Implemented** | |
-| `IMonnifyCollectionsClient.InitiateBankTransferAsync` | `POST /api/v1/merchant/bank-transfer/init-payment` | **Implemented** | Generates a one-time dynamic account for an already-initialized transaction. Our docs' simplified sample for this endpoint shows the USSD field as `ussdCode`; the real sandbox response returns `ussdPayment` instead (which is what `BankTransferPaymentDetails.UssdPayment` already maps), alongside several fields that sample omits entirely (`accountDurationSeconds`, `requestTime`, `expiresOn`, `amount`, `fee`, `totalPayable`, `collectionChannel`). Also saw an always-null `productInformation` field not currently modeled - shape unknown |
+| `IMonnifyCollectionsClient.InitiateBankTransferAsync` | `POST /api/v1/merchant/bank-transfer/init-payment` | **Implemented** | Real response field is `ussdPayment`, not `ussdCode` as our simplified doc sample shows |
+| `IMonnifyCollectionsClient.ChargeAsync` | `POST /api/v1/merchant/cards/charge` | **Implemented** | Requires a `transactionReference` from `InitializeTransactionAsync` first. Automatic retry disabled - this directly debits a card |
+| `IMonnifyCollectionsClient.AuthorizeOtpAsync` | `POST /api/v1/merchant/cards/otp/authorize` | **Implemented** | Not sandbox-verified - blocked on the `ChargeAsync` bin issue above |
+| `IMonnifyCollectionsClient.Authorize3dsAsync` | `POST /api/v1/sdk/cards/secure-3d/authorize` | **Implemented** | Restricted to PCI DSS-certified merchants, requires separate activation |
 | `IMonnifyCollectionsClient.SearchTransactionsAsync` | `GET /api/v1/transactions/search?page=&size=&...` | **Implemented** | Many optional filters (reference, amount range, customer, status, date range) |
 | `IMonnifyCollectionsClient.GetTransactionAsync` | `GET /api/v2/transactions/{transactionReference}` | **Implemented** | Amount fields are quoted strings; `decimal` via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyCollectionsClient.QueryTransactionAsync` | `GET /api/v2/merchant/transactions/query?transactionReference=&paymentReference=` | **Implemented** | Same response shape as `GetTransactionAsync`; requires at least one query parameter |
@@ -56,9 +59,6 @@ Status legend:
 | `IMonnifyBillsClient.ValidateCustomerAsync` | `POST /api/v1/vas/bills-payment/validate-customer` | **Implemented** | `validationReference` lives inside `vendInstruction`, not top-level as our docs prose implies. `minAmount`/`maxAmount` can appear top-level for amount-constrained products |
 | `IMonnifyBillsClient.VendAsync` | `POST /api/v1/vas/bills-payment/vend` | **Implemented** | Automatic retry disabled, same reasoning as Disbursements |
 | `IMonnifyBillsClient.RequeryAsync` | `GET /api/v1/vas/bills-payment/requery?reference=` | **Implemented** | Same response shape as `VendAsync` |
-| `IMonnifyCardsClient.ChargeAsync` | `POST /api/v1/merchant/cards/charge` | **Implemented** | Requires a `transactionReference` from `InitializeTransactionAsync` first. Automatic retry disabled - this directly debits a card |
-| `IMonnifyCardsClient.AuthorizeOtpAsync` | `POST /api/v1/merchant/cards/otp/authorize` | **Implemented** | Not sandbox-verified - blocked on the `ChargeAsync` bin issue above, since this needs a real `tokenId` from a successful OTP-required charge |
-| `IMonnifyCardsClient.Authorize3dsAsync` | `POST /api/v1/sdk/cards/secure-3d/authorize` | **Implemented** | Restricted to PCI DSS-certified merchants, requires separate activation. Calling it without a prior successful charge correctly returned `"No Card Payment found for this transaction."` rather than an auth/activation error, so the endpoint itself is reachable on this account; the OTP-required response shape is otherwise unverified for the same reason as `AuthorizeOtpAsync` |
 
 Update this table whenever a method moves from Planned to Implemented, or its
 endpoint changes.

@@ -1,15 +1,15 @@
 using System.Net;
-using Monnify.Cards;
+using Monnify.Collections;
 using Monnify.Exceptions;
 using Monnify.Tests.TestUtilities;
 
-namespace Monnify.Tests.Cards;
+namespace Monnify.Tests.Collections.Transactions;
 
 // Payloads below are from our own documented samples for these endpoints; see
-// docs/COMPATIBILITY.md for sandbox-verification status once that's done.
-public class MonnifyCardsClientTests
+// docs/COMPATIBILITY.md for sandbox-verification status.
+public class MonnifyCollectionsClientCardsTests
 {
-    private static MonnifyCardsClient CreateClient(FakeHttpMessageHandler handler) =>
+    private static MonnifyCollectionsClient CreateClient(FakeHttpMessageHandler handler) =>
         new(new HttpClient(handler) { BaseAddress = new Uri("https://sandbox.monnify.test") });
 
     private static ChargeCardRequest CreateChargeRequest(string cardNumber = "4111111111111111") => new()

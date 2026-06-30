@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Monnify.Cards;
+namespace Monnify.Collections;
 
 /// <summary>
 /// Browser/device fingerprint sent alongside a card charge, used for fraud screening and 3DS.
