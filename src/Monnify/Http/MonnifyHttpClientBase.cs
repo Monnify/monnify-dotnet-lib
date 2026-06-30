@@ -17,6 +17,34 @@ internal abstract class MonnifyHttpClientBase
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
+    protected async Task SendVoidAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        using var response = await _httpClient
+            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+            .ConfigureAwait(false);
+
+        var json = await ReadContentAsStringAsync(response, cancellationToken).ConfigureAwait(false);
+
+        MonnifyResponseEnvelope<object?>? envelope;
+        try
+        {
+            envelope = JsonSerializer.Deserialize<MonnifyResponseEnvelope<object?>>(json, MonnifyJsonOptions.Default);
+        }
+        catch (JsonException ex)
+        {
+            throw new MonnifyDeserializationException("Failed to parse the response received from Monnify.", json, ex);
+        }
+
+        if (envelope is null || !envelope.RequestSuccessful)
+        {
+            throw new MonnifyApiException(
+                envelope?.ResponseCode ?? "UNKNOWN",
+                envelope?.ResponseMessage ?? $"Monnify returned an unsuccessful response (HTTP {(int)response.StatusCode}).",
+                (int)response.StatusCode,
+                json);
+        }
+    }
+
     protected async Task<TResponseBody> SendAsync<TResponseBody>(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         using var response = await _httpClient

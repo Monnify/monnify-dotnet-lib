@@ -58,6 +58,17 @@ internal static class MonnifyApiPaths
             public const string Authorize3ds = "/api/v1/sdk/cards/secure-3d/authorize";
         }
 
+        internal static class SubAccounts
+        {
+            public const string Base = "/api/v1/sub-accounts";
+        }
+
+        internal static class LimitProfiles
+        {
+            public const string Base = "/api/v1/limit-profile/";
+            public const string ReservedAccountLimit = "/api/v1/bank-transfer/reserved-accounts/limit";
+        }
+
         internal static class Mandates
         {
             public const string Create = "/api/v1/direct-debit/mandate/create";

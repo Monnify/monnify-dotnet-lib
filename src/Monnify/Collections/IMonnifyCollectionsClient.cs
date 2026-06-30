@@ -78,6 +78,42 @@ public interface IMonnifyCollectionsClient
     Task<Transaction> QueryTransactionAsync(
         string? transactionReference = null, string? paymentReference = null, CancellationToken cancellationToken = default);
 
+    /// <summary>Creates a transaction limit profile that can be attached to reserved accounts.</summary>
+    Task<LimitProfile> CreateLimitProfileAsync(CreateLimitProfileRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns all limit profiles created on the integration.</summary>
+    Task<MonnifyPagedResult<LimitProfile>> GetLimitProfilesAsync(int page = 0, int size = 10, CancellationToken cancellationToken = default);
+
+    /// <summary>Updates the name and limit values of an existing limit profile.</summary>
+    Task<LimitProfile> UpdateLimitProfileAsync(string limitProfileCode, UpdateLimitProfileRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a reserved account with a transaction limit profile applied from the start.
+    /// Use <see cref="CreateReservedAccountAsync"/> when no limit profile is needed.
+    /// </summary>
+    Task<ReservedAccount> CreateReservedAccountWithLimitAsync(
+        CreateReservedAccountWithLimitRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Attaches or replaces the limit profile on an existing reserved account.</summary>
+    Task<ReservedAccount> UpdateReservedAccountLimitAsync(
+        UpdateReservedAccountLimitRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates one or more sub accounts for splitting payments between different settlement accounts.
+    /// Requires prior approval from your relationship manager for the live environment.
+    /// </summary>
+    Task<IReadOnlyList<SubAccount>> CreateSubAccountsAsync(
+        IReadOnlyList<CreateSubAccountRequest> requests, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns all sub accounts created on the integration.</summary>
+    Task<IReadOnlyList<SubAccount>> GetSubAccountsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Updates the details of an existing sub account.</summary>
+    Task<SubAccount> UpdateSubAccountAsync(UpdateSubAccountRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Deletes a sub account from the integration.</summary>
+    Task DeleteSubAccountAsync(string subAccountCode, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Initiates a direct debit mandate - a recurring authorization to debit a customer's bank
     /// account. The mandate isn't active until the customer completes authorization (a token

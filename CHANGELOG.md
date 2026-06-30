@@ -20,6 +20,12 @@ own version is independent of Monnify's API versioning.
 ## [Unreleased]
 
 ### Added
+- `IMonnifyCollectionsClient`: limit profiles - `CreateLimitProfileAsync`, `GetLimitProfilesAsync`,
+  `UpdateLimitProfileAsync`; and `CreateReservedAccountWithLimitAsync`,
+  `UpdateReservedAccountLimitAsync` for attaching limit profiles to reserved accounts.
+- `IMonnifyCollectionsClient`: sub-accounts - `CreateSubAccountsAsync`, `GetSubAccountsAsync`,
+  `UpdateSubAccountAsync`, `DeleteSubAccountAsync`. Create takes an array body (not a single object)
+  and the delete endpoint returns no `responseBody`. Requires relationship-manager approval for live.
 - `IMonnifyCollectionsClient`: direct debit mandates - `CreateMandateAsync`, `GetMandatesAsync`,
   `DebitMandateAsync`, `GetMandateDebitStatusAsync`, `CancelMandateAsync`, `ListMandatesAsync`.
   Sandbox testing surfaced several real discrepancies with our own docs (wrong field name for the

@@ -60,6 +60,72 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         return SendAsync<ReservedAccount>(new HttpRequestMessage(HttpMethod.Delete, path), cancellationToken);
     }
 
+    public Task<LimitProfile> CreateLimitProfileAsync(CreateLimitProfileRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.LimitProfiles.Base)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<LimitProfile>(httpRequest, cancellationToken);
+    }
+
+    public Task<MonnifyPagedResult<LimitProfile>> GetLimitProfilesAsync(int page = 0, int size = 10, CancellationToken cancellationToken = default)
+    {
+        var path = $"{MonnifyApiPaths.Collections.LimitProfiles.Base}?page={page}&size={size}";
+        return SendAsync<MonnifyPagedResult<LimitProfile>>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<LimitProfile> UpdateLimitProfileAsync(string limitProfileCode, UpdateLimitProfileRequest request, CancellationToken cancellationToken = default)
+    {
+        RequireValue(limitProfileCode, nameof(limitProfileCode));
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var path = $"{MonnifyApiPaths.Collections.LimitProfiles.Base}{Uri.EscapeDataString(limitProfileCode)}";
+        var httpRequest = new HttpRequestMessage(HttpMethod.Put, path)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<LimitProfile>(httpRequest, cancellationToken);
+    }
+
+    public Task<ReservedAccount> CreateReservedAccountWithLimitAsync(
+        CreateReservedAccountWithLimitRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.LimitProfiles.ReservedAccountLimit)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<ReservedAccount>(httpRequest, cancellationToken);
+    }
+
+    public Task<ReservedAccount> UpdateReservedAccountLimitAsync(
+        UpdateReservedAccountLimitRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Put, MonnifyApiPaths.Collections.LimitProfiles.ReservedAccountLimit)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<ReservedAccount>(httpRequest, cancellationToken);
+    }
+
     public Task<Invoice> CreateInvoiceAsync(CreateInvoiceRequest request, CancellationToken cancellationToken = default)
     {
         if (request is null)
@@ -193,6 +259,45 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         AppendIfPresent(query, "paymentReference", paymentReference);
         var path = $"{MonnifyApiPaths.Collections.Transactions.Query}?{string.Join("&", query)}";
         return SendAsync<Transaction>(new HttpRequestMessage(HttpMethod.Get, path), cancellationToken);
+    }
+
+    public Task<IReadOnlyList<SubAccount>> CreateSubAccountsAsync(
+        IReadOnlyList<CreateSubAccountRequest> requests, CancellationToken cancellationToken = default)
+    {
+        if (requests is null)
+        {
+            throw new ArgumentNullException(nameof(requests));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.SubAccounts.Base)
+        {
+            Content = CreateJsonContent(requests),
+        };
+        return SendAsync<IReadOnlyList<SubAccount>>(httpRequest, cancellationToken);
+    }
+
+    public Task<IReadOnlyList<SubAccount>> GetSubAccountsAsync(CancellationToken cancellationToken = default) =>
+        SendAsync<IReadOnlyList<SubAccount>>(new HttpRequestMessage(HttpMethod.Get, MonnifyApiPaths.Collections.SubAccounts.Base), cancellationToken);
+
+    public Task<SubAccount> UpdateSubAccountAsync(UpdateSubAccountRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Put, MonnifyApiPaths.Collections.SubAccounts.Base)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<SubAccount>(httpRequest, cancellationToken);
+    }
+
+    public Task DeleteSubAccountAsync(string subAccountCode, CancellationToken cancellationToken = default)
+    {
+        RequireValue(subAccountCode, nameof(subAccountCode));
+        var path = $"{MonnifyApiPaths.Collections.SubAccounts.Base}/{Uri.EscapeDataString(subAccountCode)}";
+        return SendVoidAsync(new HttpRequestMessage(HttpMethod.Delete, path), cancellationToken);
     }
 
     public Task<MandateActionResult> CreateMandateAsync(CreateMandateRequest request, CancellationToken cancellationToken = default)

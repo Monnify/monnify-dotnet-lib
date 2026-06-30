@@ -27,7 +27,15 @@ Status legend:
 | `IMonnifyCollectionsClient.SearchTransactionsAsync` | `GET /api/v1/transactions/search?page=&size=&...` | **Implemented** | Many optional filters (reference, amount range, customer, status, date range) |
 | `IMonnifyCollectionsClient.GetTransactionAsync` | `GET /api/v2/transactions/{transactionReference}` | **Implemented** | Amount fields are quoted strings; `decimal` via `JsonNumberHandling.AllowReadingFromString` |
 | `IMonnifyCollectionsClient.QueryTransactionAsync` | `GET /api/v2/merchant/transactions/query?transactionReference=&paymentReference=` | **Implemented** | Same response shape as `GetTransactionAsync`; requires at least one query parameter |
-| *(Collections — sub-accounts/splitting)* | TBD | Planned | |
+| `IMonnifyCollectionsClient.CreateLimitProfileAsync` | `POST /api/v1/limit-profile/` | **Implemented** | Sandbox-verified |
+| `IMonnifyCollectionsClient.GetLimitProfilesAsync` | `GET /api/v1/limit-profile/` | **Implemented** | `pageable`/`sort` are `null` in the real response — not modelled |
+| `IMonnifyCollectionsClient.UpdateLimitProfileAsync` | `PUT /api/v1/limit-profile/{limitProfileCode}` | **Implemented** | Profile code goes in the path; body has only the four editable fields |
+| `IMonnifyCollectionsClient.CreateReservedAccountWithLimitAsync` | `POST /api/v1/bank-transfer/reserved-accounts/limit` | **Implemented** | Separate from `CreateReservedAccountAsync` (v2 path); requires `limitProfileCode` |
+| `IMonnifyCollectionsClient.UpdateReservedAccountLimitAsync` | `PUT /api/v1/bank-transfer/reserved-accounts/limit` | **Implemented** | Sandbox-verified |
+| `IMonnifyCollectionsClient.CreateSubAccountsAsync` | `POST /api/v1/sub-accounts` | **Implemented** | Body and response are both arrays; requires relationship-manager approval for live |
+| `IMonnifyCollectionsClient.GetSubAccountsAsync` | `GET /api/v1/sub-accounts` | **Implemented** | Returns flat array (not paged) |
+| `IMonnifyCollectionsClient.UpdateSubAccountAsync` | `PUT /api/v1/sub-accounts` | **Implemented** | `subAccountCode` included in the PUT body, not the path |
+| `IMonnifyCollectionsClient.DeleteSubAccountAsync` | `DELETE /api/v1/sub-accounts/{subAccountCode}` | **Implemented** | Returns no `responseBody` — handled via `SendVoidAsync` |
 | `IMonnifyCollectionsClient.CreateMandateAsync` | `POST /api/v1/direct-debit/mandate/create` | **Implemented** | Sandbox returned `mandateStatus: "PENDING"` and no `redirectUrl`, not the `"INITIATED"` + echoed `redirectUrl` our docs sample shows |
 | `IMonnifyCollectionsClient.GetMandatesAsync` | `GET /api/v1/direct-debit/mandate/?mandateReferences=` | **Implemented** | The reference field in the response is `mandateReference`, not `externalMandateReference` as our docs sample shows. Two undocumented fields found: `responseMessage` and `schemeCode`. `mandateStatus` can be `PENDING_AUTHORIZATION`, not in our docs' status list |
 | `IMonnifyCollectionsClient.DebitMandateAsync` | `POST /api/v1/direct-debit/mandate/debit` | **Implemented** | Not sandbox-verified end-to-end - needs an `ACTIVE` mandate. Automatic retry disabled - this directly debits a mandate |
