@@ -9,6 +9,14 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [0.2.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.1.0...v0.2.0) (2026-06-30)
+
+
+### Features
+
+* add card transactions and automated release tagging ([25a62b3](https://github.com/Monnify/monnify-dotnet-lib/commit/25a62b30c36c7468faad960f48e5872eb9264d8d))
+* add card transactions client (charge, OTP, 3DS authorize) ([73cc17e](https://github.com/Monnify/monnify-dotnet-lib/commit/73cc17ea37382099bbefa50423ed48856ac9e8dc))
+
 ## [Unreleased]
 
 ### Added
