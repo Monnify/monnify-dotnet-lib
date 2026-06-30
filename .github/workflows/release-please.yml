@@ -3,11 +3,15 @@ name: release-please
 # Maintains a standing "release PR" that accumulates Conventional Commits since the last
 # release and computes the next semver bump from them (feat: -> minor, fix: -> patch,
 # "BREAKING CHANGE:" footer -> major). Merging that PR creates and pushes a vX.Y.Z tag,
-# which is what actually triggers release.yml's build/test/pack/publish pipeline - this
-# workflow only ever decides the version number and creates the tag, nothing here touches
-# NuGet or creates a GitHub Release (skip-github-release in release-please-config.json,
-# since release.yml's own publish job already creates the Release after a successful
-# publish - having both would create two Releases for the same tag).
+# which is what actually triggers release.yml's build/test/pack/publish pipeline.
+#
+# "draft": true in release-please-config.json makes this also create a draft (not
+# publicly visible) GitHub Release alongside the tag - NOT "skip-github-release", which
+# turned out to skip the tag too (see https://github.com/googleapis/release-please-action/issues/1034),
+# silently breaking this entire chain. release.yml's own publish job un-drafts that
+# release (draft: false on its softprops/action-gh-release step) only after a successful,
+# manually-approved NuGet push - so nothing is publicly visible as "released" until it
+# actually is.
 on:
   push:
     branches: [main]

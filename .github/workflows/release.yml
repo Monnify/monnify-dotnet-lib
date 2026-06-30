@@ -83,9 +83,14 @@ jobs:
       - name: Push to NuGet.org
         run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ steps.nuget_login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
-      - name: Create GitHub Release
+      # release-please creates this release as a draft (see release-please.yml) when its
+      # Release PR merges, so the tag exists without anything publicly visible yet. This step
+      # finds that same release by tag and un-drafts it - only after a successful, approved
+      # NuGet push - rather than creating a second one.
+      - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: v${{ needs.build-test-pack.outputs.version }}
           files: ./artifacts/*.nupkg
           generate_release_notes: true
+          draft: false
