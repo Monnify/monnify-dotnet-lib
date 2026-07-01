@@ -43,6 +43,35 @@ jobs:
       - name: Test
         run: dotnet test --configuration Release --no-build
 
+      # Coverage is collected from Monnify.Tests only (run separately from the line above) -
+      # IntegrationTests' skipped tests never execute SUT code, so including that project's
+      # report would just dilute the denominator with the same assembly's line count again.
+      - name: Test with coverage
+        run: dotnet test tests/Monnify.Tests/Monnify.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+      # No external service required - just parses the cobertura report coverlet already
+      # produces and fails the build below a fixed line-coverage floor. Current baseline is
+      # ~95%; 85% leaves headroom for routine work while still catching a real regression.
+      - name: Check coverage threshold
+        run: |
+          python3 - <<'PY'
+          import glob, sys, xml.etree.ElementTree as ET
+
+          THRESHOLD = 85.0
+          files = glob.glob("./coverage/**/coverage.cobertura.xml", recursive=True)
+          if not files:
+              sys.exit("No coverage report found")
+
+          root = ET.parse(files[0]).getroot()
+          covered = int(root.get("lines-covered"))
+          valid = int(root.get("lines-valid"))
+          pct = 100 * covered / valid if valid else 0
+
+          print(f"Line coverage: {pct:.2f}% ({covered}/{valid})")
+          if pct < THRESHOLD:
+              sys.exit(f"Coverage {pct:.2f}% is below the {THRESHOLD}% threshold")
+          PY
+
       # Validates the package actually builds correctly across both target frameworks - this is
       # NOT a publish step, nothing here touches NuGet.org. No artifact is uploaded either, since
       # this is only a packaging sanity check, not a release.
