@@ -1,6 +1,7 @@
 # Monnify .NET SDK
 
 [![CI](https://github.com/Monnify/monnify-dotnet-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/Monnify/monnify-dotnet-lib/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Monnify/monnify-dotnet-lib/branch/main/graph/badge.svg)](https://codecov.io/gh/Monnify/monnify-dotnet-lib)
 [![NuGet](https://img.shields.io/nuget/v/Monnify.svg)](https://www.nuget.org/packages/Monnify)
 
 An idiomatic .NET SDK for the [Monnify](https://developers.monnify.com)

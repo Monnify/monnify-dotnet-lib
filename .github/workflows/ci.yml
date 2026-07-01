@@ -72,6 +72,15 @@ jobs:
               sys.exit(f"Coverage {pct:.2f}% is below the {THRESHOLD}% threshold")
           PY
 
+      # Powers the coverage badge on the repo/README - requires the CODECOV_TOKEN repo
+      # secret (from codecov.io, after activating this repo there). Separate from the
+      # threshold check above, which stays local and doesn't depend on this succeeding.
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage
+
       # Validates the package actually builds correctly across both target frameworks - this is
       # NOT a publish step, nothing here touches NuGet.org. No artifact is uploaded either, since
       # this is only a packaging sanity check, not a release.
