@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write # required for Codecov's tokenless upload via GitHub OIDC (public repo)
 
 jobs:
   build-and-test:
@@ -40,8 +41,17 @@ jobs:
       # [SkippableFact] + Skip.IfNot(SandboxCredentials.IsAvailable, ...) (see
       # tests/Monnify.IntegrationTests/SandboxCredentials.cs) so they report as skipped here,
       # not failed - this runner has no MONNIFY_SANDBOX_API_KEY/SECRET_KEY configured on purpose.
+      # Skipped tests contribute no coverage, so the uploaded report below reflects
+      # Monnify.Tests (unit tests) only - that's the intended, reproducible signal.
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          directory: ./coverage
+          use_oidc: true
+          fail_ci_if_error: true
 
       # Validates the package actually builds correctly across both target frameworks - this is
       # NOT a publish step, nothing here touches NuGet.org. No artifact is uploaded either, since
