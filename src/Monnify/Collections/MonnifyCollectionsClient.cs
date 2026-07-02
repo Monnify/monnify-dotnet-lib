@@ -244,6 +244,20 @@ internal sealed class MonnifyCollectionsClient : MonnifyHttpClientBase, IMonnify
         return SendAsync<AuthorizeCardOtpResult>(httpRequest, cancellationToken);
     }
 
+    public Task<Transaction> ChargeCardTokenAsync(ChargeCardTokenRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, MonnifyApiPaths.Collections.Cards.ChargeToken)
+        {
+            Content = CreateJsonContent(request),
+        };
+        return SendAsync<Transaction>(httpRequest, cancellationToken);
+    }
+
     public Task<MonnifyPagedResult<TransactionSummary>> SearchTransactionsAsync(
         SearchTransactionsRequest? filter = null, int page = 0, int size = 10, CancellationToken cancellationToken = default)
     {

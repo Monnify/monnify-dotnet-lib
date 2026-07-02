@@ -54,6 +54,7 @@ internal static class MonnifyApiPaths
         internal static class Cards
         {
             public const string Charge = "/api/v1/merchant/cards/charge";
+            public const string ChargeToken = "/api/v1/merchant/cards/charge-card-token";
             public const string AuthorizeOtp = "/api/v1/merchant/cards/otp/authorize";
             public const string Authorize3ds = "/api/v1/sdk/cards/secure-3d/authorize";
         }

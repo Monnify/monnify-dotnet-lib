@@ -67,6 +67,14 @@ public interface IMonnifyCollectionsClient
     /// </summary>
     Task<AuthorizeCardOtpResult> Authorize3dsAsync(Authorize3dsCardRequest request, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Charges a previously tokenized, reusable card in a single call - no raw card details, no
+    /// OTP/3DS follow-up. The token comes from <see cref="TransactionCardDetails.CardToken"/> on an
+    /// earlier <see cref="ChargeAsync"/> result where <see cref="TransactionCardDetails.Reusable"/>
+    /// was <see langword="true"/>; the customer email must match that original charge.
+    /// </summary>
+    Task<Transaction> ChargeCardTokenAsync(ChargeCardTokenRequest request, CancellationToken cancellationToken = default);
+
     /// <summary>Searches transactions on the integration, optionally filtered by reference, amount range, customer, status, or date range.</summary>
     Task<MonnifyPagedResult<TransactionSummary>> SearchTransactionsAsync(
         SearchTransactionsRequest? filter = null, int page = 0, int size = 10, CancellationToken cancellationToken = default);
