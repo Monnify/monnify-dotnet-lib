@@ -111,6 +111,7 @@ own version is independent of Monnify's API versioning.
 ### Fixed
 
 * envelope handling now tolerates endpoints (e.g. paycodes) that omit `requestSuccessful` from their response
+* a non-JSON error body (e.g. a proxy/gateway's own error page for a 502/504) on a failing HTTP status now throws `MonnifyApiException` with the real status code, instead of a misleading `MonnifyDeserializationException` — found via a real sandbox 502 while dogfooding the published package before v1
 
 ## [0.5.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.4.0...v0.5.0) (2026-06-30)
 
