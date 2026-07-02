@@ -9,6 +9,14 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [0.10.1](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.10.0...v0.10.1) (2026-07-02)
+
+
+### Bug Fixes
+
+* sync version.json with the actual release version, fixing every … ([a9b3c23](https://github.com/Monnify/monnify-dotnet-lib/commit/a9b3c23de4e1151eb971b61410caed7d64b31dcd))
+* sync version.json with the actual release version, fixing every published NuGet version ([0de44cd](https://github.com/Monnify/monnify-dotnet-lib/commit/0de44cd742004305ef3e12dd4492060e92224338))
+
 ## [0.10.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.9.0...v0.10.0) (2026-07-02)
 
 
