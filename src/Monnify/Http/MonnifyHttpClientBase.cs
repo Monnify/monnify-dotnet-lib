@@ -32,7 +32,7 @@ internal abstract class MonnifyHttpClientBase
         }
         catch (JsonException ex)
         {
-            throw new MonnifyDeserializationException("Failed to parse the response received from Monnify.", json, ex);
+            throw CreateExceptionForUnparsableBody(response, json, ex);
         }
 
         if (envelope is null || envelope.RequestSuccessful == false)
@@ -60,7 +60,7 @@ internal abstract class MonnifyHttpClientBase
         }
         catch (JsonException ex)
         {
-            throw new MonnifyDeserializationException("Failed to parse the response received from Monnify.", json, ex);
+            throw CreateExceptionForUnparsableBody(response, json, ex);
         }
 
         // Treat as a definitive failure if RequestSuccessful is explicitly false, or if it is
@@ -86,6 +86,27 @@ internal abstract class MonnifyHttpClientBase
         }
 
         return envelope.ResponseBody;
+    }
+
+    /// <summary>
+    /// A body that fails to parse as JSON at all (not just as an envelope) is unambiguously a
+    /// failure whenever the HTTP status itself already says so - e.g. a proxy/gateway's own error
+    /// page (plain text or HTML, not even JSON) for a 502/504. Surface that the same way as any
+    /// other API failure rather than a deserialization error, which is reserved for the genuinely
+    /// unexpected case: Monnify reporting HTTP success while returning a body that doesn't parse.
+    /// </summary>
+    private static Exception CreateExceptionForUnparsableBody(HttpResponseMessage response, string json, JsonException innerException)
+    {
+        if (!response.IsSuccessStatusCode)
+        {
+            return new MonnifyApiException(
+                "UNKNOWN",
+                $"Monnify returned an unsuccessful response (HTTP {(int)response.StatusCode}).",
+                (int)response.StatusCode,
+                json);
+        }
+
+        return new MonnifyDeserializationException("Failed to parse the response received from Monnify.", json, innerException);
     }
 
     private static Task<string> ReadContentAsStringAsync(HttpResponseMessage response, CancellationToken cancellationToken)

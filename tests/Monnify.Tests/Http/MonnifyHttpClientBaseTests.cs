@@ -21,6 +21,9 @@ public class MonnifyHttpClientBaseTests
 
         public Task<TResponseBody> Call<TResponseBody>(CancellationToken cancellationToken = default) =>
             SendAsync<TResponseBody>(new HttpRequestMessage(HttpMethod.Get, "/anything"), cancellationToken);
+
+        public Task CallVoid(CancellationToken cancellationToken = default) =>
+            SendVoidAsync(new HttpRequestMessage(HttpMethod.Delete, "/anything"), cancellationToken);
     }
 
     private static FakeTypedClient CreateClient(FakeHttpMessageHandler handler) =>
@@ -59,13 +62,47 @@ public class MonnifyHttpClientBaseTests
     [Fact]
     public async Task SendAsync_NonSuccessHttpStatus_ThrowsMonnifyApiException_PreservingRawBody()
     {
+        // Not even JSON, e.g. a proxy/CDN's own error page for a 502/504 - "not an envelope at
+        // all" previously fell into MonnifyDeserializationException here, which was misleading:
+        // the HTTP status already tells us unambiguously that the call failed.
         var handler = new FakeHttpMessageHandler();
         handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.InternalServerError, "not an envelope at all"));
         var client = CreateClient(handler);
 
+        var ex = await Assert.ThrowsAsync<MonnifyApiException>(() => client.Call<FakePayload>());
+
+        Assert.Equal(500, ex.HttpStatusCode);
+        Assert.Equal("not an envelope at all", ex.RawResponseBody);
+        Assert.Contains("HTTP 500", ex.ResponseMessage);
+    }
+
+    [Fact]
+    public async Task SendAsync_SuccessHttpStatus_UnparsableBody_ThrowsMonnifyDeserializationException()
+    {
+        // The inverse of the case above: HTTP said success, but the body still isn't valid JSON.
+        // That's a genuine contract violation worth its own distinct exception, not something to
+        // paper over with the generic API-failure path.
+        var handler = new FakeHttpMessageHandler();
+        handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, "not json at all"));
+        var client = CreateClient(handler);
+
         var ex = await Assert.ThrowsAsync<MonnifyDeserializationException>(() => client.Call<FakePayload>());
 
-        Assert.Equal("not an envelope at all", ex.RawResponseBody);
+        Assert.Equal("not json at all", ex.RawResponseBody);
+    }
+
+    [Fact]
+    public async Task SendVoidAsync_NonSuccessHttpStatus_UnparsableBody_ThrowsMonnifyApiException()
+    {
+        // Same fix as SendAsync above, applied to the void path used by e.g. DeleteSubAccountAsync.
+        var handler = new FakeHttpMessageHandler();
+        handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.BadGateway, "error code: 502"));
+        var client = CreateClient(handler);
+
+        var ex = await Assert.ThrowsAsync<MonnifyApiException>(() => client.CallVoid());
+
+        Assert.Equal(502, ex.HttpStatusCode);
+        Assert.Equal("error code: 502", ex.RawResponseBody);
     }
 
     [Fact]
