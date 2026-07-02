@@ -15,8 +15,6 @@ coverage/
 
 ## Rider/VS/VSCode
 .vs/
-.vscode/*
-!.vscode/extensions.json
 .idea/
 *.suo
 
@@ -29,3 +27,7 @@ Thumbs.db
 .sandbox.env
 secrets.json
 appsettings.*.local.json
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
