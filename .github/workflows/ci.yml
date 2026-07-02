@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # full history - Nerdbank.GitVersioning needs it to compute the version
+          fetch-tags: true # belt-and-braces so a tagged commit's tags are always visible to NBGV
 
       - uses: actions/setup-dotnet@v5
         with:
