@@ -9,6 +9,14 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [1.1.0](https://github.com/Monnify/monnify-dotnet-lib/compare/v1.0.0...v1.1.0) (2026-07-02)
+
+
+### Features
+
+* add ChargeCardTokenAsync for charging a tokenized reusable card ([6b890b7](https://github.com/Monnify/monnify-dotnet-lib/commit/6b890b717d1d2f3ee7b427b8d1493c61e2f9dd7a))
+* add ChargeCardTokenAsync for charging a tokenized reusable card ([82d3777](https://github.com/Monnify/monnify-dotnet-lib/commit/82d377702d28f854e8efda989f5d817bcb10c921))
+
 ## [Unreleased]
 
 ### Features
