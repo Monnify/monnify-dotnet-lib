@@ -9,6 +9,14 @@ Each entry that introduces or changes an API call should cross-reference the
 relevant row in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md), since the SDK's
 own version is independent of Monnify's API versioning.
 
+## [0.10.2](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.10.1...v0.10.2) (2026-07-02)
+
+
+### Bug Fixes
+
+* update ValidateAccountNumberAsync to the v2 account validation path ([60ffcc7](https://github.com/Monnify/monnify-dotnet-lib/commit/60ffcc7f789374cbc346e5cd635a50aa996225c3))
+* update ValidateAccountNumberAsync to the v2 account validation path ([836a536](https://github.com/Monnify/monnify-dotnet-lib/commit/836a53675b427260edea80ce93909f26ba7814bd))
+
 ## [0.10.1](https://github.com/Monnify/monnify-dotnet-lib/compare/v0.10.0...v0.10.1) (2026-07-02)
 
 
