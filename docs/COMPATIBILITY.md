@@ -69,7 +69,7 @@ Status legend:
 | `IMonnifyDisbursementsClient.GetWalletsAsync` | `GET /api/v1/disbursements/wallet?pageNo=&pageSize=&walletReference=` | **Implemented** | 21 wallets in sandbox; `createdOn` is absent in list items but present on create response |
 | `IMonnifyDisbursementsClient.GetCustomerWalletBalanceAsync` | `GET /api/v1/disbursements/wallet/balance?accountNumber=` | **Implemented** 
 | `IMonnifyDisbursementsClient.GetWalletTransactionsAsync` | `GET /api/v1/disbursements/wallet/transactions?accountNumber=&pageNo=&pageSize=` | **Implemented** | Balance amounts sent as large integers (e.g. 5000000000); `AllowReadingFromString` applied defensively |
-| `IMonnifyVerificationClient.ValidateAccountNumberAsync` | `GET /api/v1/disbursements/account/validate?accountNumber=&bankCode=` | **Implemented** | Free on both sandbox and live |
+| `IMonnifyVerificationClient.ValidateAccountNumberAsync` | `GET /api/v2/disbursements/account/validate?accountNumber=&bankCode=` | **Implemented** | Free on both sandbox and live. Sandbox-confirmed the v1 path also still responds identically, but v2 is the current documented path |
 | `IMonnifyVerificationClient.MatchBvnDetailsAsync` | `POST /api/v1/vas/bvn-details-match` | **Implemented** | Bills the merchant wallet per request |
 | `IMonnifyVerificationClient.MatchBvnToAccountAsync` | `POST /api/v1/vas/bvn-account-match` | **Implemented** | Bills the merchant wallet per request |
 | `IMonnifyVerificationClient.VerifyNinAsync` | `POST /api/v1/vas/nin-details` | **Implemented** | Live environment only; bills the merchant wallet per request |

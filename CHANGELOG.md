@@ -16,6 +16,10 @@ own version is independent of Monnify's API versioning.
 * add paycode support — `CreatePaycodeAsync`, `GetPaycodesAsync`, `GetPaycodeAsync`, `CancelPaycodeAsync`, `GetUnmaskedPaycodeAsync` (`IMonnifyCollectionsClient`)
 * add customer wallet support — `CreateWalletAsync`, `GetWalletsAsync`, `GetCustomerWalletBalanceAsync`, `GetWalletTransactionsAsync` (`IMonnifyDisbursementsClient`)
 
+### Changed
+
+* `ValidateAccountNumberAsync` now calls `GET /api/v2/disbursements/account/validate` instead of the `v1` path — the `v1` path still responds identically in sandbox, but `v2` is the current documented path
+
 ### Fixed
 
 * envelope handling now tolerates endpoints (e.g. paycodes) that omit `requestSuccessful` from their response

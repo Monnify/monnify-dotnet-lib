@@ -22,7 +22,7 @@ internal static class MonnifyApiPaths
 
     internal static class Verification
     {
-        public const string ValidateAccountNumber = "/api/v1/disbursements/account/validate";
+        public const string ValidateAccountNumber = "/api/v2/disbursements/account/validate";
         public const string BvnDetailsMatch = "/api/v1/vas/bvn-details-match";
         public const string BvnAccountMatch = "/api/v1/vas/bvn-account-match";
         public const string NinDetails = "/api/v1/vas/nin-details";

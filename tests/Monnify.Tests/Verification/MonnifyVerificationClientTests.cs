@@ -22,7 +22,7 @@ public class MonnifyVerificationClientTests
         var result = await client.ValidateAccountNumberAsync("0123456789", "044");
 
         Assert.Equal(HttpMethod.Get, handler.Requests[0].Method);
-        Assert.Equal("/api/v1/disbursements/account/validate", handler.Requests[0].RequestUri!.AbsolutePath);
+        Assert.Equal("/api/v2/disbursements/account/validate", handler.Requests[0].RequestUri!.AbsolutePath);
         Assert.Equal("accountNumber=0123456789&bankCode=044", handler.Requests[0].RequestUri!.Query.TrimStart('?'));
         Assert.Equal("Ada Lovelace", result.AccountName);
         Assert.Equal("NGN", result.CurrencyCode);
