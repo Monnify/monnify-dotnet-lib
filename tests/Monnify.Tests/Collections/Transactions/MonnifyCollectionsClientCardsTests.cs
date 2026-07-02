@@ -159,4 +159,57 @@ public class MonnifyCollectionsClientCardsTests
         var client = CreateClient(new FakeHttpMessageHandler());
         await Assert.ThrowsAsync<ArgumentNullException>(() => client.Authorize3dsAsync(null!));
     }
+
+    [Fact]
+    public async Task ChargeCardTokenAsync_SendsPostWithJsonBody_AndDeserializesResult()
+    {
+        // Sample payload from our official API reference (POST /api/v1/merchant/cards/charge-card-token).
+        var handler = new FakeHttpMessageHandler();
+        handler.Enqueue(HttpResponseFactory.Json(HttpStatusCode.OK, """
+            { "requestSuccessful": true, "responseMessage": "success", "responseCode": "0",
+              "responseBody": {
+                "transactionReference": "MNFY|87|20230602223418|007039",
+                "paymentReference": "1642776mml0068n2937",
+                "amountPaid": "20.00", "totalPayable": "20.00", "settlementAmount": "19.68",
+                "paidOn": "02/06/2023 10:34:26 PM", "paymentStatus": "PAID",
+                "paymentDescription": "Paying for Product A", "currency": "NGN", "paymentMethod": "CARD",
+                "product": { "type": "API_NOTIFICATION", "reference": "1642776mml0068n2937" },
+                "cardDetails": {
+                  "cardType": "MasterCard", "last4": "9098", "expMonth": "07", "expYear": "23",
+                  "bin": "539941", "bankCode": "057", "bankName": "Zenith bank", "reusable": true,
+                  "countryCode": "string", "cardToken": "MNFY_0CD0138B45F7478E941C3EC6D3698969",
+                  "supportsTokenization": false, "maskedPan": "539941******9098"
+                },
+                "customer": { "email": "benjikali29@gmail.com", "name": "Marvelous Benji" }
+              } }
+            """));
+        var client = CreateClient(handler);
+
+        var result = await client.ChargeCardTokenAsync(new ChargeCardTokenRequest
+        {
+            CardToken = "MNFY_0CD0138B45F7478E941C3EC6D3698969",
+            Amount = 20,
+            CustomerName = "Marvelous Benji",
+            CustomerEmail = "benjikali29@gmail.com",
+            PaymentReference = "1642776mml0068n2937",
+            PaymentDescription = "Paying for Product A",
+            ContractCode = "5867418298",
+            ApiKey = "MK_TEST_PLACEHOLDER123",
+        });
+
+        Assert.Equal(HttpMethod.Post, handler.Requests[0].Method);
+        Assert.Equal("/api/v1/merchant/cards/charge-card-token", handler.Requests[0].RequestUri!.AbsolutePath);
+        Assert.Contains("\"cardToken\":\"MNFY_0CD0138B45F7478E941C3EC6D3698969\"", handler.RequestBodies[0]);
+        Assert.Equal("PAID", result.PaymentStatus);
+        Assert.Equal(20, result.AmountPaid);
+        Assert.Equal("MNFY_0CD0138B45F7478E941C3EC6D3698969", result.CardDetails!.CardToken);
+        Assert.True(result.CardDetails.Reusable);
+    }
+
+    [Fact]
+    public async Task ChargeCardTokenAsync_NullRequest_Throws()
+    {
+        var client = CreateClient(new FakeHttpMessageHandler());
+        await Assert.ThrowsAsync<ArgumentNullException>(() => client.ChargeCardTokenAsync(null!));
+    }
 }

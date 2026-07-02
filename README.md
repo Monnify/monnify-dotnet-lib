@@ -7,17 +7,20 @@
 An idiomatic .NET SDK for the [Monnify](https://developers.monnify.com)
 payment gateway API, targeting `netstandard2.0` and `net8.0`.
 
-> **Status: early release (pre-1.0).** Published on NuGet.org starting with
-> `0.1.0` — the public API may still change before a stable `1.0`. See
-> [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for every endpoint this SDK
-> calls and how it was verified.
+> **Status: stable (`1.0`).** Every endpoint this SDK calls has shipped. See
+> [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for each one's verification
+> status — all are sandbox-verified except `ChargeCardTokenAsync`, which
+> needs a reusable card token from a successful `ChargeAsync` call to test
+> end-to-end, currently blocked by a sandbox card-BIN issue.
 
 ## Features
 
 - **Collections** — hosted checkout, reserved (virtual) accounts, invoices,
-  bank-transfer payment links, transaction search
+  bank-transfer payment links, card transactions (charge, tokenized-card
+  charge, OTP, 3DS authorize), refunds, transaction limit profiles,
+  sub-accounts/splitting, direct debit mandates, paycodes, transaction search
 - **Disbursements** — single and bulk transfers, OTP authorization, wallet
-  balance, transaction search
+  balance, customer wallets, transaction search
 - **Bills payment** — airtime, data, cable TV, electricity, and other billers
 - **Verification** — account name enquiry, BVN/NIN checks
 - **Banks** — bank list, USSD-enabled banks

@@ -50,7 +50,7 @@ Status legend:
 | `IMonnifyCollectionsClient.GetPaycodeAsync` | `GET /api/v1/paycode/{paycodeReference}` | **Implemented** | Returns masked paycode; response omits `requestSuccessful` field (handled via nullable envelope) |
 | `IMonnifyCollectionsClient.CancelPaycodeAsync` | `DELETE /api/v1/paycode/{paycodeReference}` | **Implemented** | Returns the cancelled paycode object; sandbox discovered undocumented `cancelDate` field |
 | `IMonnifyCollectionsClient.GetUnmaskedPaycodeAsync` | `GET /api/v1/paycode/{paycodeReference}/authorize` | **Implemented** | Returns the unmasked paycode value (e.g. `04797046` instead of `******46`) |
-| *(Collections — card tokenization)* | TBD | Planned | |
+| `IMonnifyCollectionsClient.ChargeCardTokenAsync` | `POST /api/v1/merchant/cards/charge-card-token` | **Implemented** | Charges a previously tokenized, reusable card in one call - no OTP/3DS follow-up. Response shape matches `Transaction` exactly (`cardDetails.cardToken`/`.reusable` already modeled there). Automatic retry disabled, same reasoning as `ChargeAsync` - directly debits a card. Not yet sandbox-verified end-to-end (needs a `reusable: true` card token from a prior successful charge, which the sandbox BIN issue on `ChargeAsync` currently blocks) |
 | *(Collections — Payment Links)* | N/A | Out of scope | Dashboard-only feature, no API |
 | `IMonnifyDisbursementsClient.InitiateSingleTransferAsync` | `POST /api/v2/disbursements/single` | **Implemented** | Requires Transfer feature activation (sales@monnify.com); automatic retry disabled |
 | `IMonnifyDisbursementsClient.AuthorizeSingleTransferAsync` | `POST /api/v2/disbursements/single/validate-otp` | **Implemented** | For a transfer with status `PENDING_AUTHORIZATION` |
