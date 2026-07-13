@@ -18,7 +18,7 @@
     <!-- Only resolved on netstandard2.0 builds; net8.0 uses FrameworkReference to Microsoft.AspNetCore.App instead -->
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.11" />
     <!-- Build-time only -->
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.85" />
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.91" />
     <!-- Test dependencies -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
